@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family:"Fontspring";
+    src: url(../../assets/Fonts/Fontspring-DEMO-rocgroteskextrawide-bold.otf);
+}
+@font-face {
+    font-family:"Satoshi";
+    src: url(../../assets/Fonts/66aa728085dec3390cb7f058_Satoshi-Variable.ttf);
+}
+
+@theme{
+    --font-Fontspring : "Fontspring";
+    --font-Satoshi : "Satoshi";
+}
+
+body::-webkit-scrollbar{
+    width: 5px;
+    background: #18181B;
+}
+body::-webkit-scrollbar-thumb{
+    background: #fff;
+    border-radius: 7px;
+}
