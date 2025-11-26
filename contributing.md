@@ -17,19 +17,14 @@ Click the **Fork** button on GitHub to create your own copy of this repository.
 
 ### 2. Clone Your Fork
 
-
 git clone https://github.com/<your-username>/LocalMind.git
 cd LocalMind
-
 
 ### 3. Create a New Branch
 
 Create a branch that describes your change:
 
-
 git checkout -b feature-name
-
-
 Examples:
 
 * `add-license`
@@ -47,10 +42,8 @@ Examples:
 
 Use meaningful commit messages:
 
-
 git add .
 git commit -m "Short description of the change"
-
 
 **Good examples:**
 
@@ -103,12 +96,10 @@ Make sure:
 
 Before starting new work, sync your fork:
 
-
 git fetch upstream
 git checkout main
 git merge upstream/main
 git push origin main
-
 
 ---
 
