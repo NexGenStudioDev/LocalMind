@@ -4,6 +4,7 @@ import { IUser } from "./user.type";
 import User from "./user.model";
 import * as argon2 from "argon2";
 import UserConstant from "./user.constant";
+import crypto from "crypto";
 
 export interface JwtPayload {
   userId: string;
@@ -119,10 +120,15 @@ class UserUtils {
     if (!apiKey || apiKey.length < 8) return "*";
     const visibleStart = apiKey.slice(0, 4);
     const visibleEnd = apiKey.slice(-4);
-    const masked = "*".repeat(apiKey.length - 8);
+    const masked = "*".repeat(5);
     return `${visibleStart}${masked}${visibleEnd}`;
   }
-
+  /**
+   * Hash code using SHA-256
+   */
+  public static hashCode(code: string): string {
+    return crypto.createHash('sha256').update(code).digest('hex');
+  }
 
 }
 

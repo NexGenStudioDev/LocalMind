@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import UserConstant from "./user.constant";
 import { StatusConstant } from "../../../constant/Status.constant";
 import { th } from "zod/v4/locales";
+import User from "./user.model";
 
 class UserController {
 
@@ -126,7 +127,7 @@ class UserController {
 
   async apiEndPointCreater(req: Request, res: Response): Promise<void> {
     try {
-
+console.log('Generating API key for user:', req.user);
 
       if (!req.user) {
           throw new Error(UserConstant.INVALID_INPUT);
@@ -153,17 +154,11 @@ class UserController {
  async getApiKey(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.user?._id;
-
-
-
-
       if (!userId) {
         throw new Error(UserConstant.INVALID_INPUT);
       }
 
       const user = await UserUtils.findById(userId);
-
-
 
 
       if (!user || !user.apikey) {
@@ -178,7 +173,99 @@ class UserController {
     }
   }
   
+  async requestRevealCode(req: Request, res: Response): Promise<Response> {
+    try {
+      const userId = req.user?._id;
+      const userEmail = req.user?.email;
 
+      if (!userId || !userEmail) {
+        return res.status(401).json({
+          success: false,
+          message: 'User not authenticated'
+        });
+      }
+
+      // Send verification code and store in user document
+      const result = await userService.sendApiKeyRevealCode(userId, userEmail);
+
+      if (!result.success) {
+        return res.status(500).json({
+          success: false,
+          message: result.message
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Verification code sent to your email',
+        expiresIn: 300 // 5 minutes
+      });
+
+    } catch (error) {
+      console.error('[UserController] Error requesting reveal code:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send verification code'
+      });
+    }
+  }
+ async revealApiKey(req: Request, res: Response): Promise<Response> {
+    try {
+      const userId = req.user?._id;
+      const { verificationCode } = req.body;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          message: 'User not authenticated'
+        });
+      }
+      console.log('Received verification code:', verificationCode);
+
+      if (!verificationCode) {
+        return res.status(400).json({
+          success: false,
+          message: 'Verification code is required'
+        });
+      }
+
+      // Verify the code
+      const isValid = await userService.verifyCode(userId, verificationCode);
+ 
+
+      if (!isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid or expired verification code'
+        });
+      }
+
+      // Get user's API key
+      const user = await User.findById(userId).select('apikey');
+
+      if (!user || !user.apikey) {
+        return res.status(404).json({
+          success: false,
+          message: 'API key not found'
+        });
+      }
+
+    
+
+      return res.status(200).json({
+        success: true,
+        apiKey: user.apikey,
+        message: 'API key revealed successfully'
+      });
+
+    } catch (error) {
+      console.error('[UserController] Error revealing API key:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to reveal API key'
+      });
+    }
+  }
 
 }
 

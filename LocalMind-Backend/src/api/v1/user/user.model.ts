@@ -34,6 +34,16 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       type: String,
       default: null,
     },
+  otp: {
+  type: String,
+  default: null,
+  select: false, 
+},
+otpExpiresAt: {
+  type: Date,
+  default: null,
+  select: false, 
+}
   },
   { timestamps: true },
 );

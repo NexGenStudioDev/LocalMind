@@ -7,4 +7,6 @@ export interface IUser {
   apikey?: string | null;
   model?: string | null;
   modelApiKey?: string | null;
+  otp?: string | null;
+  otpExpiresAt?: Date | null;
 }

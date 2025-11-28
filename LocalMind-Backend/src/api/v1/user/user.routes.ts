@@ -17,6 +17,8 @@ router.get(
 );
 router.get("/v1/user/apiKey",  userMiddleware.middleware,  userController.getApiKey);
 
-// router.post("v1/user/apikey/reveal",   userMiddleware.middleware, UserController.revealApiKey);
+router.post("/v1/user/apiKey/request-code", userMiddleware.middleware,userController.requestRevealCode )
+
+router.post("/v1/user/apiKey/reveal",   userMiddleware.middleware, userController.revealApiKey);
 
 export { router as userRoutes };

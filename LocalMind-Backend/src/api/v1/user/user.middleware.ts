@@ -18,6 +18,7 @@ class UserMiddleware {
     
 
       const decodedData: IUser | null = UserUtils.verifyToken(token);
+      
 
 
       if (!decodedData) {
