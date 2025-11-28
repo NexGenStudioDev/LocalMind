@@ -1,14 +1,10 @@
-import tubeImg from "../../../../../assets/tubeImg.png";
-import blobImg from "../../../../../assets/blobImg.png";
-import waveImg from "../../../../../assets/waveImg.png";
-import dotShadowImg from "../../../../../assets/dotShadowImg.png";
-import globeImg from "../../../../../assets/globeImg.png";
-import linesImg from "../../../../../assets/linesImg.png";
-import Card from "../../../../../shared/component/v1/Card";
-import type { CardProps } from "../../../../../types/Interfaces";
+import globeImg from "../../../../assets/globeImg.png";
+import linesImg from "../../../../assets/linesImg.png";
+
 import gsap from "gsap";
 import { ScrollTrigger, SplitText } from "gsap/all";
 import { useGSAP } from "@gsap/react";
+import type { CardProps } from "../../../../types/Interfaces";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
