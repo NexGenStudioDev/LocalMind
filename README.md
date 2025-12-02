@@ -1086,7 +1086,7 @@ npm run dev
 - [ ] Custom model fine-tuning UI
 - [ ] Blockchain-based API key management
 
-**Want to suggest a feature?** [Open an issue](https://github.com/NexGenStudioDev/LocalMind/issues) or join our [Discord community](#)!
+**Want to suggest a feature?** [Open an issue](https://github.com/NexGenStudioDev/LocalMind/issues) or join our Discord community (link coming soon)!
 
 ---
 
