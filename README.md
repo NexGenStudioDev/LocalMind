@@ -183,17 +183,48 @@ Create `.env` inside **server**:
 ```
 LocalMind/
 │
-├── server/                
-│   ├── src/
-│   ├── routes/
-│   ├── controllers/
-│   └── models/
+├── assets/
+│   └── Banner_LocalMind.png
 │
-└── client/
-    ├── src/
-    ├── components/
-    ├── pages/
-    └── hooks/
+├── LocalMind-Backend/
+│   ├── src/
+│   │   └── ... (backend source code)
+│   │
+│   ├── types/
+│   │   └── ... (TypeScript types)
+│   │
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── .prettierignore
+│   ├── .prettierrc
+│   ├── a.md
+│   ├── jest.config.ts
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   ├── setup-cloudflare.sh
+│   ├── tsconfig.json
+│
+├── LocalMind-Frontend/
+│   ├── public/
+│   │   └── ... (static assets)
+│   │
+│   ├── src/
+│   │   └── ... (React code)
+│   │
+│   ├── .gitignore
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── vite.config.ts
+│
+├── Contributing.md
+├── LICENSE
+└── README.md
+
 ```
 
 ---
