@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  localmind:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: localmind:latest
+    container_name: localmind-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Application Settings
+      - NODE_ENV=production
+      - PORT=3000
+      - ENVIRONMENT=production
+      
+      # Security
+      - LOCALMIND_SECRET=${LOCALMIND_SECRET:-your-secret-key-change-me}
+      
+      # API Keys (Optional - for cloud providers)
+      - API_KEY=${API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      
+      # Database (if needed in future)
+      # - DATABASE_URL=${DATABASE_URL:-}
+      
+      # Ollama Connection (if running locally)
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://host.docker.internal:11434}
+    
+    volumes:
+      # Persist uploaded files and training data
+      - localmind-uploads:/app/uploads
+      - localmind-data:/app/data
+      
+    networks:
+      - localmind-network
+    
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Optional: Run Ollama in Docker (uncomment if needed)
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: localmind-ollama
+  #   restart: unless-stopped
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama-models:/root/.ollama
+  #   networks:
+  #     - localmind-network
+
+networks:
+  localmind-network:
+    driver: bridge
+
+volumes:
+  localmind-uploads:
+    driver: local
+  localmind-data:
+    driver: local
+  # ollama-models:
+  #   driver: local
