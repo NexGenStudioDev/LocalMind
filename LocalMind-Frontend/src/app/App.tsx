@@ -8,8 +8,13 @@ const App: React.FC = () => {
 
   return (
     <>
+      {/* Global Loader */}
       {Loader && <MainLoader fn={setLoader} />}
+
+      {/* Main Navbar (always visible unless hidden in route) */}
       <Navbar />
+
+      {/* All application routes including Chat Page */}
       <AppRoutes />
     </>
   );
