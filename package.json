@@ -1,0 +1,36 @@
+{
+  "name": "localmind",
+  "private": true,
+  "version": "1.0.0",
+  "description": "LocalMind - AI-powered local development assistant",
+  "scripts": {
+    "prepare": "husky",
+    "lint": "pnpm --filter localmind-backend lint && pnpm --filter localmind-frontend lint",
+    "lint:fix": "pnpm --filter localmind-backend lint:fix && pnpm --filter localmind-frontend lint:fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2"
+  },
+  "lint-staged": {
+    "LocalMind-Backend/**/*.{ts,js}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "LocalMind-Frontend/**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:rolldown-vite@7.1.14"
+    }
+  }
+}

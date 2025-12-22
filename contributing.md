@@ -17,68 +17,89 @@ Click the **Fork** button on GitHub to create your own copy of this repository.
 
 ### 2. Clone Your Fork
 
-
 git clone https://github.com/<your-username>/LocalMind.git
 cd LocalMind
-
 
 ### 3. Create a New Branch
 
 Create a branch that describes your change:
 
-
 git checkout -b feature-name
-
 
 Examples:
 
-* `add-license`
-* `fix-path-error`
-* `improve-readme`
-* `add-ui-component`
+- `add-license`
+- `fix-path-error`
+- `improve-readme`
+- `add-ui-component`
 
 ### 4. Make Your Changes
 
-* Add or update necessary files.
-* Keep code style clean and consistent.
-* If adding a feature, include relevant documentation.
+- Add or update necessary files.
+- Keep code style clean and consistent.
+- If adding a feature, include relevant documentation.
 
 ### 5. Commit Your Changes
 
 Use meaningful commit messages:
 
-
 git add .
 git commit -m "Short description of the change"
 
-
 **Good examples:**
 
-* `Add MIT license`
-* `Fix missing environment variable issue`
-* `Improve error handling in backend API`
+- `Add MIT license`
+- `Fix missing environment variable issue`
+- `Improve error handling in backend API`
 
 ### 6. Push to Your Fork
 
 git push origin feature-name
 
-
 ### 7. Open a Pull Request (PR)
 
-* Go to your fork on GitHub.
-* Click **Compare & pull request**.
-* Choose base: `main` (original repo)
+- Go to your fork on GitHub.
+- Click **Compare & pull request**.
+- Choose base: `main` (original repo)
   compare: `feature-name` (your branch)
-* Add a clear description of the changes.
+- Add a clear description of the changes.
 
 ---
 
 ## 🧪 Coding Guidelines
 
-* Follow consistent formatting and naming.
-* Write clear comments where needed.
-* Avoid committing temporary or system-generated files.
-* If your change affects functionality, explain the reason in the PR.
+- Follow consistent formatting and naming.
+- Write clear comments where needed.
+- Avoid committing temporary or system-generated files.
+- If your change affects functionality, explain the reason in the PR.
+
+---
+
+## 🔧 Code Quality Tools
+
+This project uses **ESLint** and **Prettier** to ensure consistent code style across the codebase.
+
+### Available Scripts
+
+From the root directory, you can run:
+
+```bash
+# Run linting on all packages
+pnpm lint
+
+# Run linting and auto-fix issues
+pnpm lint:fix
+
+# Format all files with Prettier
+pnpm format
+
+# Check if files are properly formatted
+pnpm format:check
+```
+
+### Pre-commit Hooks
+
+This project uses **Husky** and **lint-staged** to automatically format and lint staged files before each commit. This ensures all code committed to the repository follows our style guidelines.
 
 ---
 
@@ -86,16 +107,16 @@ git push origin feature-name
 
 If you are contributing files such as:
 
-* `LICENSE`
-* `README.md`
-* `CONTRIBUTING.md`
-* `CODE_OF_CONDUCT.md`
+- `LICENSE`
+- `README.md`
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
 
 Make sure:
 
-* File names follow standard naming.
-* Text is clearly formatted in Markdown.
-* The PR explains why the document is being added or updated.
+- File names follow standard naming.
+- Text is clearly formatted in Markdown.
+- The PR explains why the document is being added or updated.
 
 ---
 
@@ -103,12 +124,10 @@ Make sure:
 
 Before starting new work, sync your fork:
 
-
 git fetch upstream
 git checkout main
 git merge upstream/main
 git push origin main
-
 
 ---
 
@@ -116,8 +135,8 @@ git push origin main
 
 If you have questions or want guidance:
 
-* Open an **Issue** on GitHub
-* Or start a discussion in the repository
+- Open an **Issue** on GitHub
+- Or start a discussion in the repository
 
 We are happy to help!
 
