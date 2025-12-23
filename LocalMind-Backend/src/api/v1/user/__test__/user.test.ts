@@ -38,8 +38,10 @@ describe('User Registration Tests', () => {
     }
 
     try {
-      const res = await axios.post(`${env.BACKEND_URL}/user/register`, {
-        name: 'Test User',
+      const res = await axios.post(`${env.BACKEND_URL}/auth/signup`, {
+        firstName: 'Test User',
+        birthPlace: 'Test City',
+        location: 'Test Country',
         email: testEmail,
         password: 'Test@1234',
       })
@@ -70,8 +72,10 @@ describe('User Registration Tests', () => {
     }
 
     try {
-      const res = await axios.post(`${env.BACKEND_URL}/user/register`, {
-        name: 'Duplicate User',
+      const res = await axios.post(`${env.BACKEND_URL}/auth/signup`, {
+        firstName: 'Duplicate User',
+        birthPlace: 'Duplicate City',
+        location: 'Duplicate Country',
         email: testEmail,
         password: 'Test@1234',
       })
@@ -81,7 +85,7 @@ describe('User Registration Tests', () => {
       throw Error('Should not be able to register with existing email')
     } catch (error: any) {
       expect(error.response).toBeDefined()
-      expect(error.response.status).toBe(404)
+      expect(error.response.status).toBe(409)
       expect(error.response.data.message).toMatch(/already exists/i)
     }
   }, 10000)

@@ -1,17 +1,21 @@
 import mongoose, { Schema, Model } from 'mongoose'
 import { IUser } from './user.type'
+import { AllowedUserRoles } from './user.constant'
 
 const userSchema: Schema<IUser> = new Schema<IUser>(
   {
-    name: {
+    firstName: {
       type: String,
       required: true,
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
       index: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -20,7 +24,28 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
     },
     role: {
       type: String,
+      enum: AllowedUserRoles,
       default: 'user',
+    },
+    birthPlace: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    location: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    portfolioUrl: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    bio: {
+      type: String,
+      default: null,
+      trim: true,
     },
     apikey: {
       type: String,

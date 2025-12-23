@@ -58,6 +58,12 @@ enum UserConstant {
   INVALID_INPUT = 'User is not available in request',
   INVALID_CREDENTIALS = 'Invalid credentials',
   NAME_REQUIRED = 'Name is required!',
+  FIRST_NAME_REQUIRED = 'First name is required',
+  BIRTH_PLACE_REQUIRED = 'Birth place is required',
+  LOCATION_REQUIRED = 'Location is required',
+  INVALID_ROLE = 'Invalid user role',
+  INVALID_PORTFOLIO_URL = 'Portfolio URL is invalid',
+  BIO_TOO_LONG = 'Bio exceeds the maximum allowed length',
 
   // ✅ DATABASE & SERVER ERRORS
 
@@ -82,3 +88,15 @@ enum UserConstant {
 }
 
 export default UserConstant
+
+export const AllowedUserRoles = ['user', 'admin', 'creator'] as const
+
+export const PasswordConfig = {
+  minLength: 8,
+  maxLength: 20,
+  saltRounds: 10,
+}
+
+export const BioConfig = {
+  maxLength: 500,
+}

@@ -28,6 +28,9 @@ class userService {
     const user = await User.create({
       ...data,
       password: hashPassword,
+      role: data.role || 'user',
+      portfolioUrl: data.portfolioUrl ?? null,
+      bio: data.bio ?? null,
     })
     return user
   }

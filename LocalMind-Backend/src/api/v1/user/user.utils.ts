@@ -2,8 +2,9 @@ import jwt, { SignOptions } from 'jsonwebtoken'
 import { env } from '../../../constant/env.constant'
 import { IUser } from './user.type'
 import User from './user.model'
+import bcrypt from 'bcrypt'
 import * as argon2 from 'argon2'
-import UserConstant from './user.constant'
+import UserConstant, { PasswordConfig } from './user.constant'
 
 export interface JwtPayload {
   userId: string
@@ -21,7 +22,7 @@ class UserUtils {
     } as SignOptions)
   }
 
-  public static verifyToken(token: string): IUser | null {
+  public static verifyToken(token: string): Partial<IUser> | null {
     try {
       const decoded = jwt.verify(token, this.JWT_SECRET)
 
@@ -61,11 +62,11 @@ class UserUtils {
       if (!PassMatch) {
         throw new Error(UserConstant.INVALID_PASSWORD)
       }
-      const userObj: IUser = user.toObject()
-      delete (userObj as { password?: string }).password
-      delete (userObj as { createdAt?: Date }).createdAt
-      delete (userObj as { updatedAt?: Date }).updatedAt
-      delete (userObj as { __v?: number }).__v
+      const userObj = this.sanitizeUser(user)
+
+      if (!userObj) {
+        throw new Error(UserConstant.USER_NOT_FOUND)
+      }
 
       const token = this.generateToken({
         userId: String(user._id),
@@ -84,22 +85,16 @@ class UserUtils {
 
   public static async findById(userId: string): Promise<IUser | null> {
     const user = await User.findById(userId)
-    return user
+    return this.sanitizeUser(user) as IUser | null
   }
 
   public static async passwordHash(password: string): Promise<string> {
-    return await argon2.hash(password)
+    return bcrypt.hash(password, PasswordConfig.saltRounds)
   }
 
   public static async findUserByEmail(email: string): Promise<Partial<IUser> | null> {
     const user = await User.findOne({ email })
-    if (!user) return null
-    const userObj = user.toObject() as IUser
-    delete (userObj as { password?: string }).password
-    delete (userObj as { createdAt?: Date }).createdAt
-    delete (userObj as { updatedAt?: Date }).updatedAt
-    delete (userObj as { __v?: number }).__v
-    return userObj
+    return this.sanitizeUser(user)
   }
 
   private static async passwordMatching({
@@ -109,7 +104,24 @@ class UserUtils {
     dbPass: string
     userPass: string
   }): Promise<boolean> {
-    return await argon2.verify(dbPass, userPass)
+    const isBcryptMatch = await bcrypt.compare(userPass, dbPass)
+    if (isBcryptMatch) return true
+
+    try {
+      return await argon2.verify(dbPass, userPass)
+    } catch {
+      return false
+    }
+  }
+  public static sanitizeUser(user: IUser | null): Partial<IUser> | null {
+    if (!user) return null
+    const userObj = typeof (user as any).toObject === 'function' ? (user as any).toObject() : { ...user }
+
+    delete (userObj as { password?: string }).password
+    delete (userObj as { __v?: number }).__v
+    delete (userObj as { apikey?: string | null }).apikey
+    delete (userObj as { modelApiKey?: string | null }).modelApiKey
+    return userObj as Partial<IUser>
   }
   public static maskApiKey(apiKey: string): string {
     if (!apiKey || apiKey.length < 8) return '*'
