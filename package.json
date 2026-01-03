@@ -1,0 +1,68 @@
+{
+  "name": "localmind-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start-tunnel": "lt --port 5000",
+    "setup:backend": "ts-node src/script/project-setup.ts",
+    "format": "prettier --write .",
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NexGenStudioDev/LocalMind-Backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NexGenStudioDev/LocalMind-Backend/issues"
+  },
+  "homepage": "https://github.com/NexGenStudioDev/LocalMind-Backend#readme",
+  "description": "",
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/argon2": "^0.15.4",
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.7.2",
+    "@types/nodemailer": "^7.0.3",
+    "jest": "^30.2.0",
+    "prettier": "3.6.2",
+    "ts-jest": "^29.4.5",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@jest/globals": "^30.2.0",
+    "@langchain/community": "^0.3.57",
+    "@langchain/core": "^0.3.78",
+    "@langchain/google-genai": "^0.2.18",
+    "@langchain/groq": "^0.2.4",
+    "@langchain/ollama": "^0.2.4",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.10",
+    "argon2": "^0.44.0",
+    "axios": "^1.12.2",
+    "bcrypt": "^6.0.0",
+    "chalk": "^5.6.2",
+    "cloudflared-tunnel": "^1.0.3",
+    "cookie-parser": "^1.4.7",
+    "d3-dsv": "^2.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "figlet": "^1.9.3",
+    "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.36",
+    "mongoose": "^8.19.1",
+    "morgan": "^1.10.1",
+    "ngrok": "5.0.0-beta.2",
+    "nodemailer": "^7.0.10",
+    "ora": "^9.0.0",
+    "zod": "^4.1.12"
+  }
+}
