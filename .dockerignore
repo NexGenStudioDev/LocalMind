@@ -91,8 +91,8 @@ setup-cloudflare.sh
 .eslintrc*
 eslint.config.js
 
-# TypeScript config (not needed in runtime)
-tsconfig*.json
+# TypeScript config (needed for build, but not in final image)
+# Note: tsconfig.json is needed in builder stage, excluded from final stage
 
 # Jest config
 jest.config.ts
