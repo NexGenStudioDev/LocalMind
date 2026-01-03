@@ -12,11 +12,11 @@ class OllamaController {
 
       const Ai_Response = await OllamaService.generateText(prompt, model)
 
-      console.log('Ai_Response', Ai_Response)
+      console.debug('Ai_Response ready')
 
       SendResponse.success(res, 'AI response generated successfully', Ai_Response, 200)
     } catch (err: any) {
-      console.log('err', err)
+      console.error('Failed to generate AI response', err)
       SendResponse.error(res, 'Failed to generate AI response', 500, err)
     }
   }

@@ -1,4 +1,3 @@
-import { console } from 'inspector'
 import AiModelConfig from './AiModelConfig.model'
 import { IAiModelConfig, IAgent } from './AiModelConfig.type'
 
@@ -8,7 +7,7 @@ class AiModelConfig_Service {
   }
 
   async addAgent(userId: string, agent: IAgent): Promise<IAiModelConfig | null> {
-    console.log('Adding agent for userId:', userId, 'with agent:', agent)
+    console.debug('Adding agent for userId:', userId)
     return await AiModelConfig.findOneAndUpdate(
       { userId },
       { $push: { agents: agent } },

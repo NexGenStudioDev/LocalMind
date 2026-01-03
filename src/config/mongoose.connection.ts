@@ -7,10 +7,10 @@ const mongooseConection = () => {
       serverSelectionTimeoutMS: 5000,
     })
     .then(() => {
-      console.log('Mongoose Connection.')
+      console.info('Mongoose connection established.')
     })
     .catch((err) => {
-      console.log(err)
+      console.error('Mongoose connection error:', err)
       setTimeout(mongooseConection, 5000)
     })
 }
