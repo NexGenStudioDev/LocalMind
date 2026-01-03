@@ -1,6 +1,7 @@
 import { OllamaEmbeddings, Ollama } from '@langchain/ollama'
 import AiTemplate from '../../../../Template/v1/Ai.template'
 import { safeParse } from '../../../../utils/safeJson.util'
+import { getErrorMessage } from '../../../../utils/error.util'
 
 class OllamaService {
   public async getVector(data: any): Promise<number[] | undefined> {
@@ -14,8 +15,8 @@ class OllamaService {
       const vector = await embeddings.embedDocuments(data)
 
       return vector[0]
-    } catch (error: any) {
-      throw new Error(error.message || 'Failed to fetch embeddings')
+    } catch (error: unknown) {
+      throw new Error(getErrorMessage(error) || 'Failed to fetch embeddings')
     }
   }
 
@@ -42,8 +43,8 @@ class OllamaService {
       }
 
       return result
-    } catch (error: any) {
-      throw new Error(error.message || 'Failed to generate text')
+    } catch (error: unknown) {
+      throw new Error(getErrorMessage(error) || 'Failed to generate text')
     }
   }
 }

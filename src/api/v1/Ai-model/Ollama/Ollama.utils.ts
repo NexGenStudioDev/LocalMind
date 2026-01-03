@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getErrorMessage } from '../../../../utils/error.util'
 
 class OllamaUtils {
   async isModelAvailable(modelName: string): Promise<boolean> {
@@ -18,8 +19,8 @@ class OllamaUtils {
       }
 
       return true
-    } catch (error: any) {
-      throw new Error(error.message || 'Failed to check model availability')
+    } catch (error: unknown) {
+      throw new Error(getErrorMessage(error) || 'Failed to check model availability')
     }
   }
 
@@ -32,11 +33,12 @@ class OllamaUtils {
       }
 
       return response.data.models.map((model: any) => model.name)
-    } catch (error: any) {
-      if (error.code === 'ECONNREFUSED' || error.code === 'ECONNRESET') {
+    } catch (error: unknown) {
+      const e = error as any
+      if (e && (e.code === 'ECONNREFUSED' || e.code === 'ECONNRESET')) {
         throw new Error('Could not connect to Ollama server. Is it running?')
       } else {
-        throw new Error(`Failed to list available models: ${error.message}`)
+        throw new Error(`Failed to list available models: ${getErrorMessage(error)}`)
       }
     }
   }
