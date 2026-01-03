@@ -1,0 +1,69 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Coverage directories
+coverage/
+.nyc_output/
+
+# IDE / editors
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.classpath
+.project
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Yarn
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Local files
+.local/
