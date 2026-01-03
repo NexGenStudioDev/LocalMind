@@ -14,7 +14,7 @@ class DataSet_Service {
 
       // debug: prompt template loaded
 
-      const Extract_Data = geminiUtils.generateResponse(promptTemplate, {
+      const Extract_Data = await geminiUtils.generateResponse(promptTemplate, {
         userName: 'Alice',
         userPrompt: Data,
       })
