@@ -1,13 +1,16 @@
 version: '3.8'
 
+# Alternative docker-compose configuration with separate backend and frontend services
+# Use this if you want to scale services independently
+
 services:
-  # Combined service (backend + frontend in one container)
-  localmind:
+  # Backend API service
+  backend:
     build:
-      context: .
+      context: ./LocalMind-Backend
       dockerfile: Dockerfile
-    image: localmind:latest
-    container_name: localmind-app
+    image: localmind-backend:latest
+    container_name: localmind-backend
     restart: unless-stopped
     ports:
       - '3000:3000'
@@ -30,7 +33,7 @@ services:
       - GROQ_API_KEY=${GROQ_API_KEY:-}
       - ROUTERAI_API_KEY=${ROUTERAI_API_KEY:-}
 
-      # Ollama Connection (if running locally)
+      # Ollama Connection
       - OLLAMA_HOST=${OLLAMA_HOST:-http://host.docker.internal:11434}
 
       # Database (MongoDB)
@@ -46,7 +49,7 @@ services:
       - REDIS_PORT=${REDIS_PORT:-6379}
       - REDIS_PASSWORD=${REDIS_PASSWORD:-}
 
-      # Other required env vars (set defaults or override in .env)
+      # Other required env vars
       - Your_Name=${Your_Name:-LocalMind}
       - YOUR_EMAIL=${YOUR_EMAIL:-admin@localmind.local}
       - YOUR_PASSWORD=${YOUR_PASSWORD:-changeme}
@@ -61,10 +64,9 @@ services:
       - RATE_LIMIT_ENABLED=${RATE_LIMIT_ENABLED:-false}
       - ENABLE_RATE_LIMITING=${ENABLE_RATE_LIMITING:-false}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-7d}
-      - BACKEND_URL=${BACKEND_URL:-http://localhost:3000}
+      - BACKEND_URL=${BACKEND_URL:-http://backend:3000}
 
     volumes:
-      # Persist uploaded files and training data
       - localmind-uploads:/app/uploads
       - localmind-data:/app/data
 
@@ -78,21 +80,27 @@ services:
       retries: 3
       start_period: 40s
 
-    # Security options
-    security_opt:
-      - no-new-privileges:true
+  # Frontend service
+  frontend:
+    build:
+      context: ./LocalMind-Frontend
+      dockerfile: Dockerfile
+    image: localmind-frontend:latest
+    container_name: localmind-frontend
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+    networks:
+      - localmind-network
+    healthcheck:
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost/']
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-    # Resource limits (optional)
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 2G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
-
-  # Optional: Run Ollama in Docker (uncomment if needed)
+  # Optional: Run Ollama in Docker
   # ollama:
   #   image: ollama/ollama:latest
   #   container_name: localmind-ollama
@@ -115,3 +123,4 @@ volumes:
     driver: local
   # ollama-models:
   #   driver: local
+

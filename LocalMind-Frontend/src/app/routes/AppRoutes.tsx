@@ -13,7 +13,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/" element={<HomePage />} />
 
       {/* Chat Page */}
-      {/* <Route path="/chat" element={<ChatPage />} />   */}
+      <Route path="/chat" element={<ChatPage />} />  {/* ✅ New route */}
     </Routes>
   )
 }
