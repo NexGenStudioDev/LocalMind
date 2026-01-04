@@ -6,7 +6,7 @@ export const EnvSchema = z.object({
   APP_ENV: z.enum(['development', 'production', 'test']).default('development'),
   DEBUG: z
     .string()
-    .transform((v) => v === 'true')
+    .transform(v => v === 'true')
     .default(true),
   Your_Name: z.string(),
   YOUR_EMAIL: z.email(),
@@ -16,15 +16,15 @@ export const EnvSchema = z.object({
 
   CORS_ENABLED: z
     .string()
-    .transform((v) => v === 'true')
+    .transform(v => v === 'true')
     .default(true),
   RATE_LIMIT_ENABLED: z
     .string()
-    .transform((v) => v === 'true')
+    .transform(v => v === 'true')
     .default(false),
   ENABLE_RATE_LIMITING: z
     .string()
-    .transform((v) => v === 'true')
+    .transform(v => v === 'true')
     .default(false),
 
   JWT_SECRET: z.string(),
@@ -51,5 +51,6 @@ export const EnvSchema = z.object({
 
   GOOGLE_API_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
+  OPENAI_MODEL: z.string().default('gpt-4o-mini'),
   BACKEND_URL: z.string().default('http://localhost:5000'),
 })
