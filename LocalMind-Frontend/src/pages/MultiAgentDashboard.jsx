@@ -6,7 +6,7 @@ import React, { useState } from "react";
  */
 
 const DEFAULT_AGENTS = [
-  { id: 1, name: "Planner Agent", role: "Planner", active: true, priority: 1 },
+  { id: 1, name: "Planner Agent", role: "Planner", active: true, priority: 1, systemPrompt: "", task: "" },
   { id: 2, name: "Research Agent", role: "Researcher", active: true, priority: 2 },
   { id: 3, name: "Reasoning Agent", role: "Reasoner", active: true, priority: 3 },
   { id: 4, name: "Execution Agent", role: "Executor", active: true, priority: 4 },
