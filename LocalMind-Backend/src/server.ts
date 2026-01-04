@@ -6,6 +6,7 @@ const PORT = Number(env.PORT) || 3000
 const APP_ENV = env.APP_ENV || 'development'
 const HOST = '0.0.0.0'
 
+
 app.get('/', async (_req, res) => {
   res.send('Hello from LocalMind backend!')
 })

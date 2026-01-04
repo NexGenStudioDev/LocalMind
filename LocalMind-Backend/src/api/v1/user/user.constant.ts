@@ -52,7 +52,9 @@ enum UserConstant {
   FORBIDDEN = 'Forbidden access',
 
   // ✅ USER & INPUT VALIDATION
-
+  INVALID_ROLE = 'Invalid role',
+  INVALID_URL = 'Invalid portfolio URL',
+  BIO_MAX_LENGTH = 'Bio must be at most 300 characters',
   USER_NOT_FOUND = 'User not found',
   EMAIL_ALREADY_EXISTS = 'Email already exists',
   INVALID_INPUT = 'User is not available in request',

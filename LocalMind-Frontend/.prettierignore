@@ -6,12 +6,10 @@ package-lock.json
 # Build outputs
 dist
 build
-coverage
-.nyc_output
+out
 
 # Logs
 *.log
-logs
 
 # Environment files
 .env
@@ -19,6 +17,7 @@ logs
 
 # Cache
 .cache
+.parcel-cache
 
 # OS files
 .DS_Store
@@ -29,3 +28,4 @@ logs
 
 # Git
 .git
+

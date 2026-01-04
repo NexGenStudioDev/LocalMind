@@ -1,0 +1,39 @@
+{
+  "name": "localmind",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LocalMind - AI Without Limits",
+  "scripts": {
+    "prepare": "husky install",
+    "lint:backend": "cd LocalMind-Backend && pnpm lint",
+    "lint:frontend": "cd LocalMind-Frontend && pnpm lint",
+    "lint:fix:backend": "cd LocalMind-Backend && pnpm lint:fix",
+    "lint:fix:frontend": "cd LocalMind-Frontend && pnpm lint:fix",
+    "format:backend": "cd LocalMind-Backend && pnpm format",
+    "format:frontend": "cd LocalMind-Frontend && pnpm format",
+    "format:check:backend": "cd LocalMind-Backend && pnpm format:check",
+    "format:check:frontend": "cd LocalMind-Frontend && pnpm format:check",
+    "lint": "pnpm lint:backend && pnpm lint:frontend",
+    "lint:fix": "pnpm lint:fix:backend && pnpm lint:fix:frontend",
+    "format": "pnpm format:backend && pnpm format:frontend",
+    "format:check": "pnpm format:check:backend && pnpm format:check:frontend"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11"
+  },
+  "lint-staged": {
+    "LocalMind-Backend/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "LocalMind-Frontend/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}
+

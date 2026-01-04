@@ -38,7 +38,9 @@ class UserController {
 
       const user = await userService.createUser(validatedData)
 
+
       const userObj = UserUtils.sanitizeUser(user)
+
 
       const token = UserUtils.generateToken({
         userId: String(user._id),
@@ -48,18 +50,24 @@ class UserController {
 
       this.setHeaderToken(res, token)
 
-      SendResponse.success(res, UserConstant.CREATE_USER_SUCCESS, { userObj, token }, 201)
+      SendResponse.success(res, UserConstant.CREATE_USER_SUCCESS, { userObj }, 201)
     } catch (err: any) {
-      if (err.message === UserConstant.EMAIL_ALREADY_EXISTS) {
-        SendResponse.error(res, err.message, 409)
-        return
-      }
-      if (err?.name === 'ZodError') {
-        SendResponse.error(res, err.message || UserConstant.CREATE_USER_FAILED, 400, err)
-        return
-      }
-      SendResponse.error(res, err.message || UserConstant.CREATE_USER_FAILED, 500, err)
-    }
+  if (err?.code === 11000) {
+    SendResponse.error(
+      res,
+      UserConstant.EMAIL_ALREADY_EXISTS,
+      StatusConstant.CONFLICT
+    )
+    return
+  }
+
+  SendResponse.error(
+    res,
+    err.message || UserConstant.CREATE_USER_FAILED,
+    StatusConstant.INTERNAL_SERVER_ERROR,
+    err
+  )
+}
   }
 
   async login(req: Request, res: Response): Promise<void> {
