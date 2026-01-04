@@ -52,4 +52,7 @@ export const EnvSchema = z.object({
   GOOGLE_API_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
   BACKEND_URL: z.string().default('http://localhost:5000'),
+
+  OLLAMA_HOST: z.string().default('http://localhost:11434'),
+  OLLAMA_DEFAULT_MODEL: z.string().default('llama3'),
 })
