@@ -10,7 +10,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // Handle login logic here
-    console.log('Email:', email, 'Password:', password)
+    console.log('Login submitted for email:', email)
   }
 
   return (
