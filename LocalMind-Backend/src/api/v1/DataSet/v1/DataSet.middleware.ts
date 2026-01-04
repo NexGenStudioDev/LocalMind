@@ -1,3 +1,4 @@
+import { Request } from 'express'
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
@@ -24,7 +25,7 @@ const storage = multer.diskStorage({
   },
 })
 
-const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   // Supported extensions for AI training data
   const allowedExtensions = ['.pdf', '.csv', '.xlsx', '.json', '.txt', '.md']
   const ext = path.extname(file.originalname).toLowerCase()

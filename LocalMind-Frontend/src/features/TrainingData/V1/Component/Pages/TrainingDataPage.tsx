@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Database, Upload, Plus, List, Search } from 'lucide-react'
+import { Database, Upload, Plus, List } from 'lucide-react'
 import ManualEntryForm from '../ManualEntryForm'
 import DatasetUpload from '../DatasetUpload'
 import TrainingDataList from '../TrainingDataList'

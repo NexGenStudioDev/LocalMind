@@ -75,12 +75,12 @@ const DatasetUpload: React.FC<DatasetUploadProps> = ({ onSuccess }) => {
       setTimeout(() => {
         onSuccess()
       }, 2000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Upload error:', err)
-      setError(
-        err.response?.data?.message ||
-          'Failed to upload dataset. Please check file format and size.'
-      )
+      const errorMessage = axios.isAxiosError(err)
+        ? err.response?.data?.message
+        : 'Failed to upload dataset. Please check file format and size.'
+      setError(errorMessage)
     } finally {
       setUploading(false)
     }

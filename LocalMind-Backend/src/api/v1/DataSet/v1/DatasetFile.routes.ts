@@ -18,4 +18,4 @@ router.post('/upload', datasetUpload.single('dataset'), DatasetFileController.up
 // Trigger processing of an uploaded file
 router.post('/:id/process', DatasetFileController.process)
 
-export const DatasetFileRoutes = router
+export const DatasetFileRoutes: Router = router

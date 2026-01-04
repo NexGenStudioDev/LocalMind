@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { Save, X, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Save, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 interface ManualEntryFormProps {
   onSuccess: () => void
@@ -57,11 +57,12 @@ const ManualEntryForm: React.FC<ManualEntryFormProps> = ({ onSuccess }) => {
       setTimeout(() => {
         onSuccess()
       }, 1500)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error saving training sample:', err)
-      setError(
-        err.response?.data?.message || 'Failed to save training sample. Is the backend running?'
-      )
+      const errorMessage = axios.isAxiosError(err)
+        ? err.response?.data?.message
+        : 'Failed to save training sample. Is the backend running?'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

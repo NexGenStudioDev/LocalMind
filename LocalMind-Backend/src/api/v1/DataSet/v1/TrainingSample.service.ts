@@ -1,7 +1,14 @@
 import { TrainingSample } from './TrainingSample.model'
-import { ITrainingSample, IAnswerTemplate } from './DataSet.type'
+import { ITrainingSample } from './DataSet.type'
 import { EmbeddingUtils } from './Embedding.utils'
-import { Types } from 'mongoose'
+import { Types, FilterQuery, PipelineStage } from 'mongoose'
+
+interface ISampleFilters {
+  type?: string
+  tags?: string | string[]
+  isActive?: boolean | string
+  sourceType?: string
+}
 
 /**
  * TrainingSampleService - Handles the business logic for AI training data.
@@ -13,7 +20,10 @@ class TrainingSampleService {
    * @param userId - The ID of the user creating the sample.
    * @param data - The training sample data (question, type, answerTemplate, etc.).
    */
-  public async createSample(userId: string, data: Partial<ITrainingSample>): Promise<ITrainingSample> {
+  public async createSample(
+    userId: string,
+    data: Partial<ITrainingSample>
+  ): Promise<ITrainingSample> {
     // Generate embedding for the question to enable semantic search later
     const embedding = await EmbeddingUtils.generateEmbedding(data.question!)
 
@@ -34,13 +44,15 @@ class TrainingSampleService {
    * @param page - Current page number.
    * @param limit - Number of items per page.
    */
-  public async getSamples(filters: any, page: number = 1, limit: number = 10) {
+  public async getSamples(filters: ISampleFilters, page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit
-    
+
     // Build query object based on provided filters
-    const query: any = {}
+    const query: FilterQuery<ITrainingSample> = {}
     if (filters.type) query.type = filters.type
-    if (filters.tags) query.tags = { $in: Array.isArray(filters.tags) ? filters.tags : [filters.tags] }
+    if (filters.tags) {
+      query.tags = { $in: Array.isArray(filters.tags) ? filters.tags : [filters.tags] }
+    }
     if (filters.isActive !== undefined) query.isActive = filters.isActive === 'true'
     if (filters.sourceType) query.sourceType = filters.sourceType
 
@@ -69,10 +81,13 @@ class TrainingSampleService {
   }
 
   /**
-   * Updates an existing training sample. 
+   * Updates an existing training sample.
    * If the question changes, we must re-generate the embedding.
    */
-  public async updateSample(id: string, data: Partial<ITrainingSample>): Promise<ITrainingSample | null> {
+  public async updateSample(
+    id: string,
+    data: Partial<ITrainingSample>
+  ): Promise<ITrainingSample | null> {
     const existingSample = await TrainingSample.findById(id)
     if (!existingSample) return null
 
@@ -98,13 +113,17 @@ class TrainingSampleService {
    * @param topK - Number of nearest neighbors to return.
    * @param filters - Additional metadata filters.
    */
-  public async vectorSearch(queryText: string, topK: number = 5, filters: any = {}) {
+  public async vectorSearch(
+    queryText: string,
+    topK: number = 5,
+    filters: FilterQuery<ITrainingSample> = {}
+  ) {
     // 1. Convert the search query into a vector embedding
     const queryVector = await EmbeddingUtils.generateEmbedding(queryText)
 
     // 2. Build the aggregation pipeline for vector search
     // Note: This assumes a vector index named "vector" is created on the collection
-    const pipeline: any[] = [
+    const pipeline: PipelineStage[] = [
       {
         $vectorSearch: {
           index: 'vector',

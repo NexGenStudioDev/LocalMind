@@ -6,7 +6,7 @@ const router = Router()
 
 /**
  * Training Sample Routes
- * All routes are protected by UserMiddleware to ensure only authenticated users 
+ * All routes are protected by UserMiddleware to ensure only authenticated users
  * can manage their training data.
  */
 
@@ -21,4 +21,4 @@ router.get('/:id', TrainingSampleController.getOne)
 router.put('/:id', TrainingSampleController.update)
 router.delete('/:id', TrainingSampleController.delete)
 
-export const TrainingSampleRoutes = router
+export const TrainingSampleRoutes: Router = router

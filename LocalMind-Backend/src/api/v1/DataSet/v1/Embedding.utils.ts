@@ -1,4 +1,4 @@
-import OllamaService from '../Ai-model/Ollama/Ollama.service'
+import OllamaService from '../../Ai-model/Ollama/Ollama.service'
 
 export class EmbeddingUtils {
   /**

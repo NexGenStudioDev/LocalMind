@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { ITrainingSample } from './DataSet.type'
 
 const SectionSchema = new Schema(
@@ -32,7 +32,7 @@ const TrainingSampleSchema = new Schema<ITrainingSample>(
 
     embedding: {
       type: [Number],
-      index: 'vector',
+      index: true,
       required: true,
     },
 

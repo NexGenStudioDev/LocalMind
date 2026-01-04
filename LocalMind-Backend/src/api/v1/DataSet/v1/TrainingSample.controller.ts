@@ -13,12 +13,17 @@ class TrainingSampleController {
    */
   public async create(req: Request, res: Response): Promise<void> {
     try {
-      const userId = (req as any).user?._id // Extracted from auth middleware
+      const userId = req.user?._id as string // Extracted from auth middleware
       const sample = await TrainingSampleService.createSample(userId, req.body)
-      
+
       SendResponse.success(res, 'Training sample created successfully', sample, 201)
-    } catch (error: any) {
-      SendResponse.error(res, error.message || 'Failed to create training sample', 500, error)
+    } catch (error: unknown) {
+      SendResponse.error(
+        res,
+        error instanceof Error ? error.message : 'Failed to create training sample',
+        500,
+        error
+      )
     }
   }
 
@@ -29,16 +34,21 @@ class TrainingSampleController {
   public async getAll(req: Request, res: Response): Promise<void> {
     try {
       const { page, limit, type, tags, isActive, sourceType } = req.query
-      const filters = { type, tags, isActive, sourceType }
-      
+      const filters = {
+        type: type as string,
+        tags: tags as string[],
+        isActive: isActive === 'true',
+        sourceType: sourceType as string,
+      }
+
       const result = await TrainingSampleService.getSamples(
         filters,
         Number(page) || 1,
         Number(limit) || 10
       )
-      
+
       SendResponse.success(res, 'Training samples retrieved successfully', result)
-    } catch (error: any) {
+    } catch (error: unknown) {
       SendResponse.error(res, 'Failed to fetch training samples', 500, error)
     }
   }
@@ -49,12 +59,18 @@ class TrainingSampleController {
    */
   public async getOne(req: Request, res: Response): Promise<void> {
     try {
-      const sample = await TrainingSampleService.getSampleById(req.params.id)
+      const { id } = req.params
+      if (!id) {
+        SendResponse.error(res, 'ID is required', 400)
+        return
+      }
+      const sample = await TrainingSampleService.getSampleById(id)
       if (!sample) {
-        return SendResponse.error(res, 'Training sample not found', 404)
+        SendResponse.error(res, 'Training sample not found', 404)
+        return
       }
       SendResponse.success(res, 'Training sample retrieved successfully', sample)
-    } catch (error: any) {
+    } catch (error: unknown) {
       SendResponse.error(res, 'Failed to fetch training sample', 500, error)
     }
   }
@@ -65,12 +81,18 @@ class TrainingSampleController {
    */
   public async update(req: Request, res: Response): Promise<void> {
     try {
-      const sample = await TrainingSampleService.updateSample(req.params.id, req.body)
+      const { id } = req.params
+      if (!id) {
+        SendResponse.error(res, 'ID is required', 400)
+        return
+      }
+      const sample = await TrainingSampleService.updateSample(id, req.body)
       if (!sample) {
-        return SendResponse.error(res, 'Training sample not found', 404)
+        SendResponse.error(res, 'Training sample not found', 404)
+        return
       }
       SendResponse.success(res, 'Training sample updated successfully', sample)
-    } catch (error: any) {
+    } catch (error: unknown) {
       SendResponse.error(res, 'Failed to update training sample', 500, error)
     }
   }
@@ -81,12 +103,18 @@ class TrainingSampleController {
    */
   public async delete(req: Request, res: Response): Promise<void> {
     try {
-      const sample = await TrainingSampleService.softDeleteSample(req.params.id)
+      const { id } = req.params
+      if (!id) {
+        SendResponse.error(res, 'ID is required', 400)
+        return
+      }
+      const sample = await TrainingSampleService.softDeleteSample(id)
       if (!sample) {
-        return SendResponse.error(res, 'Training sample not found', 404)
+        SendResponse.error(res, 'Training sample not found', 404)
+        return
       }
       SendResponse.success(res, 'Training sample deactivated successfully', sample)
-    } catch (error: any) {
+    } catch (error: unknown) {
       SendResponse.error(res, 'Failed to delete training sample', 500, error)
     }
   }
@@ -99,7 +127,8 @@ class TrainingSampleController {
     try {
       const { query, topK, filters } = req.body
       if (!query) {
-        return SendResponse.error(res, 'Search query is required', 400)
+        SendResponse.error(res, 'Search query is required', 400)
+        return
       }
 
       const results = await TrainingSampleService.vectorSearch(
@@ -109,8 +138,13 @@ class TrainingSampleController {
       )
 
       SendResponse.success(res, 'Semantic search completed successfully', results)
-    } catch (error: any) {
-      SendResponse.error(res, 'Vector search failed', 500, error)
+    } catch (error: unknown) {
+      SendResponse.error(
+        res,
+        error instanceof Error ? error.message : 'Failed to search training samples',
+        500,
+        error
+      )
     }
   }
 }

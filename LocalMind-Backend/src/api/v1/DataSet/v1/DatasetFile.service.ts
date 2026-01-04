@@ -4,6 +4,7 @@ import { IDatasetFile } from './DataSet.type'
 import { EmbeddingUtils } from './Embedding.utils'
 import fs from 'fs'
 import path from 'path'
+// @ts-expect-error - csv-parser does not have type definitions
 import csv from 'csv-parser'
 import * as xlsx from 'xlsx'
 import pdf from 'pdf-parse'
@@ -39,7 +40,7 @@ class DatasetFileService {
       await DatasetFile.findByIdAndUpdate(fileId, { status: 'processing' })
 
       const ext = path.extname(fileRecord.originalName).toLowerCase()
-      let samples: any[] = []
+      let samples: Record<string, unknown>[] = []
 
       // Route to the appropriate parser based on file extension
       switch (ext) {
@@ -67,20 +68,27 @@ class DatasetFileService {
       let successCount = 0
       for (const item of samples) {
         try {
-          const embedding = await EmbeddingUtils.generateEmbedding(item.question)
+          const question =
+            (item.question as string) || (item.Question as string) || (item.prompt as string)
+          const answer =
+            (item.answer as string) || (item.Answer as string) || (item.response as string)
+
+          if (!question || !answer) continue
+
+          const embedding = await EmbeddingUtils.generateEmbedding(question)
           await TrainingSample.create({
             userId: fileRecord.userId,
-            question: item.question,
-            type: item.type || 'qa',
+            question,
+            type: (item.type as string) || 'qa',
             answerTemplate: {
-              answer: item.answer,
+              answer,
               sections: [],
               suggestions: [],
             },
             embedding,
             sourceType: 'dataset',
             datasetId: fileRecord._id,
-            tags: item.tags || [],
+            tags: Array.isArray(item.tags) ? item.tags : [],
           })
           successCount++
         } catch (err) {
@@ -92,33 +100,33 @@ class DatasetFileService {
         status: 'completed',
         rowCount: successCount,
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('File processing error:', error)
       await DatasetFile.findByIdAndUpdate(fileId, {
         status: 'failed',
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       })
     }
   }
 
-  private async parseJson(filePath: string): Promise<any[]> {
+  private async parseJson(filePath: string): Promise<Record<string, unknown>[]> {
     const content = fs.readFileSync(filePath, 'utf-8')
     const data = JSON.parse(content)
     return Array.isArray(data) ? data : [data]
   }
 
-  private async parseCsv(filePath: string): Promise<any[]> {
+  private async parseCsv(filePath: string): Promise<Record<string, unknown>[]> {
     return new Promise((resolve, reject) => {
-      const results: any[] = []
+      const results: Record<string, unknown>[] = []
       fs.createReadStream(filePath)
         .pipe(csv())
-        .on('data', data => results.push(data))
+        .on('data', (data: Record<string, unknown>) => results.push(data))
         .on('end', () => resolve(results))
-        .on('error', err => reject(err))
+        .on('error', (err: Error) => reject(err))
     })
   }
 
-  private async parseText(filePath: string): Promise<any[]> {
+  private async parseText(filePath: string): Promise<Record<string, unknown>[]> {
     const content = fs.readFileSync(filePath, 'utf-8')
     // Simple chunking for text files: split by double newlines
     const chunks = content.split(/\n\s*\n/).filter(c => c.trim().length > 0)
@@ -128,19 +136,22 @@ class DatasetFileService {
     }))
   }
 
-  private async parseExcel(filePath: string): Promise<any[]> {
+  private async parseExcel(filePath: string): Promise<Record<string, unknown>[]> {
     const workbook = xlsx.readFile(filePath)
     const sheetName = workbook.SheetNames[0]
+    if (!sheetName) return []
     const worksheet = workbook.Sheets[sheetName]
+    if (!worksheet) return []
     return xlsx.utils.sheet_to_json(worksheet)
   }
 
-  private async parsePdf(filePath: string): Promise<any[]> {
+  private async parsePdf(filePath: string): Promise<Record<string, unknown>[]> {
     const dataBuffer = fs.readFileSync(filePath)
-    const data = await pdf(dataBuffer)
+    // @ts-expect-error - pdf-parse is not correctly typed for ESM
+    const data = await (pdf as (buffer: Buffer) => Promise<{ text: string }>)(dataBuffer)
     // Similar to text, split by double newlines
-    const chunks = data.text.split(/\n\s*\n/).filter(c => c.trim().length > 0)
-    return chunks.map(chunk => ({
+    const chunks = data.text.split(/\n\s*\n/).filter((c: string) => c.trim().length > 0)
+    return chunks.map((chunk: string) => ({
       question: chunk.substring(0, 100) + '...',
       answer: chunk,
     }))

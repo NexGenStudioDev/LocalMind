@@ -13,10 +13,11 @@ class DatasetFileController {
   public async upload(req: Request, res: Response): Promise<void> {
     try {
       if (!req.file) {
-        return SendResponse.error(res, 'No file uploaded', 400)
+        SendResponse.error(res, 'No file uploaded', 400)
+        return
       }
 
-      const userId = (req as any).user?._id
+      const userId = req.user?._id as string
       const fileRecord = await DatasetFileService.saveFileMetadata(userId, req.file)
 
       SendResponse.success(
@@ -25,8 +26,13 @@ class DatasetFileController {
         fileRecord,
         201
       )
-    } catch (error: any) {
-      SendResponse.error(res, 'File upload failed', 500, error)
+    } catch (error: unknown) {
+      SendResponse.error(
+        res,
+        'File upload failed',
+        500,
+        error instanceof Error ? error.message : String(error)
+      )
     }
   }
 
@@ -38,14 +44,24 @@ class DatasetFileController {
     try {
       const { id } = req.params
 
+      if (!id) {
+        SendResponse.error(res, 'File ID is required', 400)
+        return
+      }
+
       // Start processing in the background
       DatasetFileService.processFile(id).catch(err => {
         console.error(`Background processing failed for file ${id}:`, err)
       })
 
       SendResponse.success(res, 'Processing started in the background', { fileId: id })
-    } catch (error: any) {
-      SendResponse.error(res, 'Failed to start processing', 500, error)
+    } catch (error: unknown) {
+      SendResponse.error(
+        res,
+        'Failed to start processing',
+        500,
+        error instanceof Error ? error.message : String(error)
+      )
     }
   }
 }
