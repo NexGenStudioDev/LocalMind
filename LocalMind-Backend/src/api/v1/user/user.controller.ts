@@ -30,18 +30,17 @@ class UserController {
     try {
       const validatedData = await userRegisterSchema.parseAsync(req.body)
 
-      if (!req.body.password) {
-        throw new Error(UserConstant.PASSWORD_REQUIRED)
+      const existingUser = await UserUtils.findUserByEmail(validatedData.email)
+
+      if (existingUser) {
+        throw new Error(UserConstant.EMAIL_ALREADY_EXISTS)
       }
 
       const user = await userService.createUser(validatedData)
 
-      const userObj = {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      }
+
+      const userObj = UserUtils.sanitizeUser(user)
+
 
       const token = UserUtils.generateToken({
         userId: String(user._id),
@@ -87,6 +86,10 @@ class UserController {
 
       SendResponse.success(res, UserConstant.LOGIN_USER_SUCCESS, { user, token }, StatusConstant.OK)
     } catch (err: any) {
+      if (err?.name === 'ZodError') {
+        SendResponse.error(res, err.message || UserConstant.INVALID_CREDENTIALS, 400, err)
+        return
+      }
       SendResponse.error(res, err.message || UserConstant.INVALID_CREDENTIALS, 401, err)
     }
   }
@@ -110,7 +113,6 @@ class UserController {
       }
 
       const userObj: Partial<IUser> = { ...user }
-      delete userObj.password
 
       SendResponse.success(res, UserConstant.USER_PROFILE_SUCCESS, userObj, 200)
     } catch (err: any) {

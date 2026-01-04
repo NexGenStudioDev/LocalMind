@@ -12,7 +12,7 @@ class UserMiddleware {
         throw new Error(UserConstant.TOKEN_MISSING)
       }
 
-      const decodedData: IUser | null = UserUtils.verifyToken(token)
+      const decodedData: Partial<IUser> | null = UserUtils.verifyToken(token)
 
       if (!decodedData) {
         throw new Error(UserConstant.INVALID_TOKEN)

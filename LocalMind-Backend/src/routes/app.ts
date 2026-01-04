@@ -1,4 +1,6 @@
 import express from 'express'
+import path from 'path'
+import fs from 'fs'
 const app: express.Application = express()
 import logger from 'morgan'
 import cookieParser from 'cookie-parser'
@@ -16,6 +18,20 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// API routes
 app.use('/api', GoogleRoutes, userRoutes, DataSetRoutes, OllamaRouter, GroqRouter)
+
+// Serve static files from public directory (for frontend in production)
+const publicPath = path.join(__dirname, '../../public')
+if (fs.existsSync(publicPath)) {
+  app.use(express.static(publicPath))
+  
+  // SPA fallback: serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(publicPath, 'index.html'))
+    }
+  })
+}
 
 export default app

@@ -289,11 +289,15 @@ The backend will be available at `http://localhost:3000`
 #### Available Scripts
 
 ```bash
-npm run dev        # Start development server with hot reload
-npm run build      # Compile TypeScript to JavaScript
-npm run start      # Run production build
-npm run lint       # Check code quality
-npm run test       # Run test suite
+npm run dev          # Start development server with hot reload
+npm run build        # Compile TypeScript to JavaScript
+npm run start        # Run production build
+npm run lint         # Check code quality with ESLint
+npm run lint:fix     # Fix ESLint errors automatically
+npm run format       # Format code with Prettier
+npm run format:check # Check code formatting
+npm run type-check   # Check TypeScript types without building
+npm run test         # Run test suite
 ```
 
 ---
@@ -316,36 +320,150 @@ The frontend will be available at `http://localhost:5173`
 #### Available Scripts
 
 ```bash
-npm run dev        # Start Vite dev server
-npm run build      # Build for production
-npm run preview    # Preview production build
-npm run lint       # Check code quality
-npm run type-check # Check TypeScript types
+npm run dev          # Start Vite dev server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Check code quality with ESLint
+npm run lint:fix     # Fix ESLint errors automatically
+npm run format       # Format code with Prettier
+npm run format:check # Check code formatting
+npm run type-check   # Check TypeScript types without building
 ```
 
 ---
 
-### 3. Docker (Optional)
+### 3. Docker (Recommended for Production)
 
-Run LocalMind with Docker for simplified deployment:
+Run LocalMind with Docker for simplified deployment and consistent environments.
+
+#### Prerequisites
+
+- **Docker** (v20.10 or higher) - [Install Docker](https://docs.docker.com/get-docker/)
+- **Docker Compose** (v2.0 or higher) - Usually included with Docker Desktop
+
+Verify installation:
 
 ```bash
-# Build and run with Docker Compose
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
+docker --version
+docker compose version
 ```
 
-**Docker Compose includes:**
+#### Quick Start with Docker Compose
 
-- Node.js backend
-- React frontend
-- Nginx reverse proxy
-- Volume persistence
+1. **Configure environment variables:**
+
+   ```bash
+   cp env.example .env
+   # Edit .env with your preferred editor
+   nano .env
+   ```
+
+   **Required variables:**
+
+   - `LOCALMIND_SECRET` - Generate with: `openssl rand -base64 32`
+   - `JWT_SECRET` - Same as LOCALMIND_SECRET or generate separately
+   - `Your_Name`, `YOUR_EMAIL`, `YOUR_PASSWORD` - Admin credentials
+   - `DB_CONNECTION_STRING` - MongoDB connection string
+   - API keys for cloud providers (optional)
+
+2. **Build and start the application:**
+
+   ```bash
+   # Build and run (combined backend + frontend)
+   docker compose up -d
+
+   # View logs
+   docker compose logs -f localmind
+
+   # Check container status
+   docker compose ps
+   ```
+
+3. **Access the application:**
+   - Frontend & API: http://localhost:3000
+   - API endpoints: http://localhost:3000/api/v1
+
+#### Using Separate Services (Advanced)
+
+For independent scaling of backend and frontend:
+
+```bash
+# Use separate services configuration
+docker compose -f docker-compose.separate.yml up -d
+
+# Access:
+# - Frontend: http://localhost:80
+# - Backend API: http://localhost:3000
+```
+
+#### Docker Commands Reference
+
+```bash
+# Build the image
+docker build -t localmind:latest .
+
+# Run container manually
+docker run -d \
+  --name localmind-app \
+  -p 3000:3000 \
+  --env-file .env \
+  -v localmind-uploads:/app/uploads \
+  -v localmind-data:/app/data \
+  localmind:latest
+
+# Stop services
+docker compose down
+
+# Stop and remove volumes (⚠️ deletes data)
+docker compose down -v
+
+# Rebuild after code changes
+docker compose up -d --build
+
+# View logs
+docker compose logs -f
+
+# Execute commands in container
+docker compose exec localmind sh
+```
+
+#### Docker Features
+
+- ✅ **Multi-stage builds** - Optimized image size (~300MB)
+- ✅ **Non-root user** - Enhanced security
+- ✅ **Health checks** - Automatic container monitoring
+- ✅ **Volume persistence** - Data survives container restarts
+- ✅ **Environment variables** - Easy configuration
+- ✅ **Resource limits** - Prevent resource exhaustion
+
+#### Troubleshooting Docker
+
+**Container won't start:**
+
+```bash
+# Check logs
+docker compose logs localmind
+
+# Verify environment variables
+docker compose exec localmind env
+```
+
+**Port already in use:**
+
+```bash
+# Change port in docker-compose.yml
+ports:
+  - '8080:3000'  # Access via localhost:8080
+```
+
+**Permission errors:**
+
+```bash
+# Fix volume permissions
+docker compose exec localmind chown -R localmind:localmind /app/uploads /app/data
+```
+
+For more Docker details, see the [Docker Deployment Guide](#-docker-deployment-guide) section below.
 
 ---
 
@@ -410,6 +528,113 @@ VITE_API_URL=http://localhost:3000
 VITE_APP_NAME=LocalMind
 VITE_ENABLE_ANALYTICS=false
 ```
+
+---
+
+## 🔧 Code Quality & Linting
+
+LocalMind uses **ESLint** and **Prettier** to maintain consistent code style and catch errors early.
+
+### Setup
+
+1. **Install dependencies** (if not already installed):
+
+   ```bash
+   # Root directory
+   pnpm install
+
+   # Backend
+   cd LocalMind-Backend && pnpm install
+
+   # Frontend
+   cd LocalMind-Frontend && pnpm install
+   ```
+
+2. **Install Husky** (for pre-commit hooks):
+   ```bash
+   # From root directory
+   pnpm install
+   pnpm prepare
+   ```
+
+### Available Commands
+
+#### Backend
+
+```bash
+cd LocalMind-Backend
+
+pnpm lint          # Check for linting errors
+pnpm lint:fix      # Automatically fix linting errors
+pnpm format        # Format code with Prettier
+pnpm format:check  # Check code formatting without changing files
+pnpm type-check    # Check TypeScript types
+```
+
+#### Frontend
+
+```bash
+cd LocalMind-Frontend
+
+pnpm lint          # Check for linting errors
+pnpm lint:fix      # Automatically fix linting errors
+pnpm format        # Format code with Prettier
+pnpm format:check  # Check code formatting without changing files
+pnpm type-check    # Check TypeScript types
+```
+
+#### Root (Run for both)
+
+```bash
+# From project root
+pnpm lint          # Lint both backend and frontend
+pnpm lint:fix      # Fix linting errors in both
+pnpm format        # Format both backend and frontend
+pnpm format:check  # Check formatting in both
+```
+
+### Pre-commit Hooks
+
+**Husky** automatically runs linting and formatting on staged files before each commit:
+
+- ✅ Automatically formats code with Prettier
+- ✅ Fixes ESLint errors when possible
+- ✅ Prevents commits with linting errors
+
+To bypass hooks (not recommended):
+
+```bash
+git commit --no-verify
+```
+
+### Editor Integration (VS Code)
+
+1. **Install recommended extensions:**
+
+   - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+   - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+2. **Settings are already configured** in `.vscode/settings.json`:
+
+   - Format on save enabled
+   - ESLint auto-fix on save enabled
+   - Prettier as default formatter
+
+3. **Reload VS Code** after installing extensions
+
+### Configuration Files
+
+- **`.prettierrc`** - Shared Prettier configuration
+- **`.prettierignore`** - Files to ignore when formatting
+- **`LocalMind-Backend/eslint.config.js`** - Backend ESLint config
+- **`LocalMind-Frontend/eslint.config.js`** - Frontend ESLint config
+
+### Rules & Standards
+
+- **TypeScript**: Strict mode enabled, no `any` types (warnings)
+- **Code Style**: Single quotes, no semicolons, 2-space indentation
+- **Unused Variables**: Allowed if prefixed with `_`
+- **Console**: Only `console.warn` and `console.error` allowed
 
 ---
 
@@ -984,7 +1209,7 @@ const eventSource = new EventSource(
   `${API_URL}/chat/stream?token=${token}&message=Write a story about AI`
 )
 
-eventSource.onmessage = (event) => {
+eventSource.onmessage = event => {
   const chunk = JSON.parse(event.data)
   console.log(chunk.content) // Display chunk in real-time
 }
@@ -1182,6 +1407,7 @@ We ❤️ contributions! Here's how you can help:
    ```
 
 3. **Make your changes**
+
    - Follow TypeScript best practices
    - Write clean, documented code
    - Add tests for new features
@@ -1426,6 +1652,7 @@ docker compose version
    ```
 
    **Required variables to set:**
+
    - `LOCALMIND_SECRET` - Generate with: `openssl rand -base64 32`
    - Add API keys for cloud providers (optional)
 
@@ -1436,6 +1663,7 @@ docker compose version
    ```
 
 4. **Access LocalMind:**
+
    - Open your browser: http://localhost:3000
    - The application will serve both backend API and frontend
 
@@ -1685,6 +1913,7 @@ docker run -d -p 3000:3000 \
    ```
 
 3. **Run as non-root user:**
+
    - The Dockerfile already implements this
    - User `localmind` (UID 1001) is used
 
