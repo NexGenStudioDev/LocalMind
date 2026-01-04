@@ -11,7 +11,7 @@ process.env.GROQ_API_KEY = 'x'
 process.env.CORS_ENABLED = 'true'
 process.env.RATE_LIMIT_ENABLED = 'false'
 process.env.ENABLE_RATE_LIMITING = 'false'
-process.env.JWT_SECRET = 'test-secret'
+process.env.JWT_SECRET = 'x'.repeat(40) // strong secret for tests
 process.env.JWT_EXPIRATION = '7d'
 process.env.DB_HOST = 'localhost'
 process.env.DB_PORT = '27017'
@@ -26,19 +26,19 @@ process.env.UPLOAD_DIR = '/tmp'
 process.env.TEMP_DIR = '/tmp'
 process.env.MAX_FILE_SIZE = '100000'
 process.env.ENCRYPTION_KEY = 'enc'
-process.env.SERVER_HMAC_SECRET = 'hmac'
+process.env.SERVER_HMAC_SECRET = 'x'.repeat(48) // strong HMAC for tests
 process.env.BACKEND_URL = 'http://localhost:5000'
 
 import UserUtils from '../user.utils'
 
 describe('UserUtils token helpers', () => {
   test('generateToken and verifyToken roundtrip', () => {
-    const payload = { userId: 'abc123', email: 'a@b.com', role: 'user' }
+    const payload = { _id: 'abc123', email: 'a@b.com', role: 'user' }
     const token = UserUtils.generateToken(payload)
     const decoded = UserUtils.verifyToken(token)
     expect(decoded).not.toBeNull()
     expect(decoded?.email).toEqual(payload.email)
-    expect(decoded?._id).toEqual(payload.userId)
+    expect(decoded?._id).toEqual(payload._id)
     expect(decoded?.role).toEqual(payload.role)
   })
 

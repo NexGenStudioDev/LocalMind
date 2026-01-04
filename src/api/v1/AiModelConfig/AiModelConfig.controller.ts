@@ -31,22 +31,19 @@ class AiModelConfig_Controller {
       if (!existingConfig) {
         CreateConfig = await AiModelConfigService.setupAiModelConfig({
           userId: String(FindUserByToken._id),
-          agents: [{} as IAgent],
+          agents: (agents as IAgent[]) || [],
           system_prompt,
         })
       }
 
-      await Promise.all(
-        (agents as IAgent[]).map(async (agent) => {
-          const isAlreadyAdded = await AiModelConfigUtility.findAiModelConfigById_And_ModelName(
-            String(FindUserByToken._id),
-            agent.model
-          )
-          if (!isAlreadyAdded) {
-            await AiModelConfigService.addAgent(String(FindUserByToken._id), agent)
-          }
-        })
-      )
+      // Avoid querying DB per agent; check duplicates in-memory if config exists
+      const existingAgents = existingConfig?.agents || []
+      for (const agent of (agents as IAgent[])) {
+        const alreadyExists = existingAgents.some((a: IAgent) => a.model === agent.model)
+        if (!alreadyExists) {
+          await AiModelConfigService.addAgent(String(FindUserByToken._id), agent)
+        }
+      }
 
       const configToReturn = CreateConfig || existingConfig
 

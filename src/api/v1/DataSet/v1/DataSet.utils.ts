@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import * as fs from 'fs/promises'
 import * as path from 'path'
 import { PromptTemplate } from '@langchain/core/prompts'
 
@@ -9,7 +9,7 @@ class DatasetUtils {
         './src/api/DataSet/v1/Prompt/question_answer_extractor_prompt.txt'
       )
 
-      let promptText = await fs.readFileSync(path_to_prompt, 'utf-8')
+      let promptText = await fs.readFile(path_to_prompt, 'utf-8')
 
       // Escape all single { and } that are not variable placeholders
       // Replace all { with {{ and } with }} except for {userName} and {userPrompt}
@@ -21,7 +21,7 @@ class DatasetUtils {
 
       return Prompt
     } catch (error) {
-      console.error('Error in Prepate_Prompt:', error)
+      console.error('Error in Prepare_Prompt:', error)
       throw error
     }
   }

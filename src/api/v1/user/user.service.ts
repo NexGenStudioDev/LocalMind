@@ -4,7 +4,7 @@ import UserUtils from './user.utils'
 import crypto from 'crypto'
 import { env } from '../../../constant/env.constant'
 
-const SERVER_HMAC_SECRET: string = env.SERVER_HMAC_SECRET || 'fallback_super_secret_key'
+const SERVER_HMAC_SECRET: string = env.SERVER_HMAC_SECRET
 
 const generateRawKey = (): Promise<string> => {
   return Promise.resolve(crypto.randomBytes(32).toString('hex'))

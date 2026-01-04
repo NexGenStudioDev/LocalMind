@@ -6,7 +6,7 @@ import * as argon2 from 'argon2'
 import UserConstant from './user.constant'
 
 export interface JwtPayload {
-  userId: string
+  _id: string
   email: string
   role?: string | undefined
 }
@@ -23,12 +23,12 @@ class UserUtils {
 
   public static verifyToken(token: string): IUser | null {
     try {
-      const decoded = jwt.verify(token, this.JWT_SECRET)
+      const decoded = jwt.verify(token, this.JWT_SECRET) as JwtPayload
 
       if (typeof decoded === 'object' && decoded !== null) {
         return {
           email: decoded.email as string,
-          _id: decoded.userId as string,
+          _id: decoded._id as string,
           role: decoded.role as string,
         }
       }
@@ -39,7 +39,7 @@ class UserUtils {
     }
   }
 
-  public static async findByEmailandCheckPassword(data: IUser) {
+  public static async findByEmailAndCheckPassword(data: IUser) {
     try {
       const user = await User.findOne({ email: data.email }).select('+password')
 
