@@ -40,25 +40,25 @@ class DatasetFileService {
       await DatasetFile.findByIdAndUpdate(fileId, { status: 'processing' })
 
       const ext = path.extname(fileRecord.originalName).toLowerCase()
-      let samples: Record<string, unknown>[] = []
+      let samples: AsyncIterable<Record<string, unknown>>
 
       // Route to the appropriate parser based on file extension
       switch (ext) {
         case '.json':
-          samples = await this.parseJson(fileRecord.path)
+          samples = this.parseJsonGenerator(fileRecord.path)
           break
         case '.csv':
-          samples = await this.parseCsv(fileRecord.path)
+          samples = this.parseCsvGenerator(fileRecord.path)
           break
         case '.txt':
         case '.md':
-          samples = await this.parseText(fileRecord.path)
+          samples = this.parseTextGenerator(fileRecord.path)
           break
         case '.xlsx':
-          samples = await this.parseExcel(fileRecord.path)
+          samples = this.parseExcelGenerator(fileRecord.path)
           break
         case '.pdf':
-          samples = await this.parsePdf(fileRecord.path)
+          samples = this.parsePdfGenerator(fileRecord.path)
           break
         default:
           throw new Error(`No parser implemented for ${ext}`)
@@ -66,7 +66,7 @@ class DatasetFileService {
 
       // Create TrainingSample records for each parsed item
       let successCount = 0
-      for (const item of samples) {
+      for await (const item of samples) {
         try {
           const question =
             (item.question as string) || (item.Question as string) || (item.prompt as string)
@@ -109,52 +109,55 @@ class DatasetFileService {
     }
   }
 
-  private async parseJson(filePath: string): Promise<Record<string, unknown>[]> {
+  private async *parseJsonGenerator(filePath: string): AsyncGenerator<Record<string, unknown>> {
     const content = fs.readFileSync(filePath, 'utf-8')
     const data = JSON.parse(content)
-    return Array.isArray(data) ? data : [data]
+    if (Array.isArray(data)) {
+      for (const item of data) yield item
+    } else {
+      yield data
+    }
   }
 
-  private async parseCsv(filePath: string): Promise<Record<string, unknown>[]> {
-    return new Promise((resolve, reject) => {
-      const results: Record<string, unknown>[] = []
-      fs.createReadStream(filePath)
-        .pipe(csv())
-        .on('data', (data: Record<string, unknown>) => results.push(data))
-        .on('end', () => resolve(results))
-        .on('error', (err: Error) => reject(err))
-    })
+  private async *parseCsvGenerator(filePath: string): AsyncGenerator<Record<string, unknown>> {
+    const stream = fs.createReadStream(filePath).pipe(csv())
+    for await (const data of stream) {
+      yield data as Record<string, unknown>
+    }
   }
 
-  private async parseText(filePath: string): Promise<Record<string, unknown>[]> {
+  private async *parseTextGenerator(filePath: string): AsyncGenerator<Record<string, unknown>> {
     const content = fs.readFileSync(filePath, 'utf-8')
-    // Simple chunking for text files: split by double newlines
     const chunks = content.split(/\n\s*\n/).filter(c => c.trim().length > 0)
-    return chunks.map(chunk => ({
-      question: chunk.substring(0, 100) + '...', // Use start of chunk as "question"
-      answer: chunk,
-    }))
+    for (const chunk of chunks) {
+      yield {
+        question: chunk.substring(0, 100) + '...',
+        answer: chunk,
+      }
+    }
   }
 
-  private async parseExcel(filePath: string): Promise<Record<string, unknown>[]> {
+  private async *parseExcelGenerator(filePath: string): AsyncGenerator<Record<string, unknown>> {
     const workbook = xlsx.readFile(filePath)
     const sheetName = workbook.SheetNames[0]
-    if (!sheetName) return []
+    if (!sheetName) return
     const worksheet = workbook.Sheets[sheetName]
-    if (!worksheet) return []
-    return xlsx.utils.sheet_to_json(worksheet)
+    if (!worksheet) return
+    const data = xlsx.utils.sheet_to_json(worksheet) as Record<string, unknown>[]
+    for (const item of data) yield item
   }
 
-  private async parsePdf(filePath: string): Promise<Record<string, unknown>[]> {
+  private async *parsePdfGenerator(filePath: string): AsyncGenerator<Record<string, unknown>> {
     const dataBuffer = fs.readFileSync(filePath)
     // @ts-expect-error - pdf-parse is not correctly typed for ESM
     const data = await (pdf as (buffer: Buffer) => Promise<{ text: string }>)(dataBuffer)
-    // Similar to text, split by double newlines
     const chunks = data.text.split(/\n\s*\n/).filter((c: string) => c.trim().length > 0)
-    return chunks.map((chunk: string) => ({
-      question: chunk.substring(0, 100) + '...',
-      answer: chunk,
-    }))
+    for (const chunk of chunks) {
+      yield {
+        question: chunk.substring(0, 100) + '...',
+        answer: chunk,
+      }
+    }
   }
 }
 

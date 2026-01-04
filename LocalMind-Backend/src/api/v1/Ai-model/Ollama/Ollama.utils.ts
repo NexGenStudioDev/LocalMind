@@ -1,9 +1,11 @@
 import axios from 'axios'
+import { env } from '../../../constant/env.constant'
 
 class OllamaUtils {
   async isModelAvailable(modelName: string): Promise<boolean> {
     try {
-      const response = await axios.get('http://localhost:11434/api/tags')
+      const baseUrl = env.OLLAMA_HOST || 'http://localhost:11434'
+      const response = await axios.get(`${baseUrl}/api/tags`)
 
       if (!response.data || !response.data.models || !Array.isArray(response.data.models)) {
         throw new Error('Please start the Ollama server to check model availability')
@@ -25,7 +27,8 @@ class OllamaUtils {
 
   async listAvailableModels(): Promise<string[]> {
     try {
-      const response = await axios.get('http://localhost:11434/api/tags')
+      const baseUrl = env.OLLAMA_HOST || 'http://localhost:11434'
+      const response = await axios.get(`${baseUrl}/api/tags`)
 
       if (!response.data || !response.data.models || !Array.isArray(response.data.models)) {
         throw new Error('Unexpected response format from Ollama API')

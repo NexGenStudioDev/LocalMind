@@ -17,7 +17,12 @@ class DatasetFileController {
         return
       }
 
-      const userId = req.user?._id as string
+      const userId = req.user?._id?.toString()
+      if (!userId) {
+        SendResponse.error(res, 'User not authenticated', 401)
+        return
+      }
+
       const fileRecord = await DatasetFileService.saveFileMetadata(userId, req.file)
 
       SendResponse.success(

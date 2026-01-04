@@ -2,6 +2,7 @@ import { Request } from 'express'
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
+import { env } from '../../../constant/env.constant'
 
 /**
  * DatasetUploadMiddleware - Configures storage and file filtering for dataset uploads.
@@ -41,6 +42,6 @@ export const datasetUpload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit for now
+    fileSize: Number(env.MAX_FILE_SIZE) || 10 * 1024 * 1024, // Use env or default to 10MB
   },
 })

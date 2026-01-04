@@ -13,7 +13,12 @@ class TrainingSampleController {
    */
   public async create(req: Request, res: Response): Promise<void> {
     try {
-      const userId = req.user?._id as string // Extracted from auth middleware
+      const userId = req.user?._id?.toString()
+      if (!userId) {
+        SendResponse.error(res, 'User not authenticated', 401)
+        return
+      }
+
       const sample = await TrainingSampleService.createSample(userId, req.body)
 
       SendResponse.success(res, 'Training sample created successfully', sample, 201)

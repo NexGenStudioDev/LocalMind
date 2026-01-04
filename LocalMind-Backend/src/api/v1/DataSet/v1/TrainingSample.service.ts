@@ -24,8 +24,23 @@ class TrainingSampleService {
     userId: string,
     data: Partial<ITrainingSample>
   ): Promise<ITrainingSample> {
+    if (!data.question) {
+      throw new Error('Question is required to create a training sample.')
+    }
+
+    // Check for duplicate question for this user
+    const existing = await TrainingSample.findOne({
+      userId: new Types.ObjectId(userId),
+      question: data.question,
+      isActive: true,
+    })
+
+    if (existing) {
+      throw new Error('A training sample with this question already exists.')
+    }
+
     // Generate embedding for the question to enable semantic search later
-    const embedding = await EmbeddingUtils.generateEmbedding(data.question!)
+    const embedding = await EmbeddingUtils.generateEmbedding(data.question)
 
     const sample = new TrainingSample({
       ...data,
@@ -53,7 +68,9 @@ class TrainingSampleService {
     if (filters.tags) {
       query.tags = { $in: Array.isArray(filters.tags) ? filters.tags : [filters.tags] }
     }
-    if (filters.isActive !== undefined) query.isActive = filters.isActive === 'true'
+    if (filters.isActive !== undefined) {
+      query.isActive = filters.isActive === 'true' || filters.isActive === true
+    }
     if (filters.sourceType) query.sourceType = filters.sourceType
 
     const data = await TrainingSample.find(query)
