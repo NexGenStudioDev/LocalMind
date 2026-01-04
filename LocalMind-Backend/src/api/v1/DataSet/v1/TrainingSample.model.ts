@@ -24,7 +24,7 @@ const TrainingSampleSchema = new Schema<ITrainingSample>(
     question: { type: String, required: true },
     type: {
       type: String,
-      enum: ['qa', 'snippet', 'doc', 'faq', 'other'],
+      enum: ['qa', 'snippet', 'doc', 'faq', 'documentation', 'conversation', 'code', 'other'],
       default: 'qa',
     },
     answerTemplate: { type: AnswerTemplateSchema, required: true },

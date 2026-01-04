@@ -23,6 +23,7 @@ const TrainingDataList: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState('all')
+  const [isSemanticSearch, setIsSemanticSearch] = useState(false)
 
   const fetchSamples = useCallback(async () => {
     setLoading(true)
@@ -41,9 +42,35 @@ const TrainingDataList: React.FC = () => {
     }
   }, [filterType])
 
+  const handleSemanticSearch = async () => {
+    if (!searchQuery.trim()) {
+      fetchSamples()
+      setIsSemanticSearch(false)
+      return
+    }
+
+    setLoading(true)
+    setIsSemanticSearch(true)
+    try {
+      const response = await axios.post('http://localhost:5000/api/v1/training-samples/search', {
+        query: searchQuery,
+        topK: 10,
+      })
+      setSamples(response.data.data)
+      setError(null)
+    } catch (err: unknown) {
+      console.error('Semantic search error:', err)
+      setError('Semantic search failed. Make sure MongoDB Atlas Vector Search is configured.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    fetchSamples()
-  }, [fetchSamples])
+    if (!isSemanticSearch) {
+      fetchSamples()
+    }
+  }, [fetchSamples, isSemanticSearch])
 
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this sample?')) return
@@ -57,31 +84,59 @@ const TrainingDataList: React.FC = () => {
     }
   }
 
-  // Filter samples based on search query
-  const filteredSamples = samples.filter(
-    sample =>
-      sample.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sample.answerTemplate.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sample.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
+  // Filter samples based on search query (only if not using semantic search)
+  const filteredSamples = isSemanticSearch
+    ? samples
+    : samples.filter(
+        sample =>
+          sample.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          sample.answerTemplate.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          sample.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
 
   return (
     <div className="space-y-6">
       {/* Search and Filter Bar */}
       <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={20} />
-          <input
-            type="text"
-            placeholder="Search by question, answer, or tags..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-black border border-zinc-800 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
-          />
+        <div className="relative flex-1 flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={20} />
+            <input
+              type="text"
+              placeholder="Search by question, answer, or tags..."
+              value={searchQuery}
+              onChange={e => {
+                setSearchQuery(e.target.value)
+                if (isSemanticSearch && e.target.value === '') {
+                  setIsSemanticSearch(false)
+                }
+              }}
+              onKeyDown={e => e.key === 'Enter' && handleSemanticSearch()}
+              className="w-full bg-black border border-zinc-800 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
+            />
+          </div>
+          <button
+            onClick={handleSemanticSearch}
+            disabled={loading || !searchQuery.trim()}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              isSemanticSearch
+                ? 'bg-blue-600 text-white'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            {loading && isSemanticSearch ? (
+              <Loader2 className="animate-spin" size={20} />
+            ) : (
+              'Semantic Search'
+            )}
+          </button>
         </div>
         <select
           value={filterType}
-          onChange={e => setFilterType(e.target.value)}
+          onChange={e => {
+            setFilterType(e.target.value)
+            setIsSemanticSearch(false)
+          }}
           className="bg-black border border-zinc-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
         >
           <option value="all">All Types</option>
@@ -91,6 +146,23 @@ const TrainingDataList: React.FC = () => {
           <option value="code">Code</option>
         </select>
       </div>
+
+      {/* Search Mode Indicator */}
+      {isSemanticSearch && !loading && (
+        <div className="flex items-center gap-2 text-blue-400 text-sm bg-blue-500/10 px-3 py-1 rounded-full w-fit">
+          <CheckCircle2 size={14} />
+          Showing semantic search results for "{searchQuery}"
+          <button
+            onClick={() => {
+              setIsSemanticSearch(false)
+              setSearchQuery('')
+            }}
+            className="ml-2 hover:underline text-zinc-400"
+          >
+            Clear
+          </button>
+        </div>
+      )}
 
       {/* Loading State */}
       {loading && (
