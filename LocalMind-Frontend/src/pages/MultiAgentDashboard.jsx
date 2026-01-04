@@ -124,7 +124,7 @@ export default function MultiAgentDashboard() {
               type="number"
               value={agent.priority}
               onChange={(e) =>
-                updateAgent(agent.id, { priority: e.target.value })
+                updateAgent(agent.id, { priority: parseInt(e.target.value, 10) || agent.priority })
               }
               style={{ width: "100%", marginBottom: "8px" }}
             />
