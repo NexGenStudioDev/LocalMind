@@ -104,6 +104,7 @@ export default function MultiAgentDashboard() {
             </select>
 
             <textarea
+              value={agent.systemPrompt || ""}
               placeholder="System Prompt"
               onChange={(e) =>
                 updateAgent(agent.id, { systemPrompt: e.target.value })
