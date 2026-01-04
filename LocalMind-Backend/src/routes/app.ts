@@ -9,6 +9,7 @@ import { DataSetRoutes } from '../api/v1/DataSet/v1/DataSet.routes'
 import { userRoutes } from '../api/v1/user/user.routes'
 import { OllamaRouter } from '../api/v1/Ai-model/Ollama/Ollama.routes'
 import { GroqRouter } from '../api/v1/Ai-model/Groq/Groq.routes'
+import { TrainingSampleRoutes } from '../api/v1/DataSet/v1/TrainingSample.routes'
 
 
 logger.token('time', () => new Date().toLocaleString())
@@ -19,7 +20,15 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // API routes
-app.use('/api', GoogleRoutes, userRoutes, DataSetRoutes, OllamaRouter, GroqRouter)
+app.use(
+  '/api',
+  GoogleRoutes,
+  userRoutes,
+  DataSetRoutes,
+  OllamaRouter,
+  GroqRouter,
+  TrainingSampleRoutes
+)
 
 // Serve static files from public directory (for frontend in production)
 const publicPath = path.join(__dirname, '../../public')
