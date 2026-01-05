@@ -30,9 +30,12 @@
     "@eslint/js": "^9.36.0",
     "@types/argon2": "^0.15.4",
     "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.3",
+    "@types/multer": "^1.4.12",
     "@types/node": "^24.7.2",
     "@types/nodemailer": "^7.0.3",
+    "@types/uuid": "^10.0.0",
     "eslint": "^9.36.0",
     "globals": "^16.4.0",
     "jest": "^30.2.0",
@@ -44,6 +47,7 @@
     "typescript-eslint": "^8.45.0"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@jest/globals": "^30.2.0",
     "@langchain/community": "^0.3.57",
     "@langchain/core": "^0.3.78",
@@ -55,12 +59,12 @@
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.10",
     "argon2": "^0.44.0",
-    "bcrypt": "^5.1.1",
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "chalk": "^5.6.2",
     "cloudflared-tunnel": "^1.0.3",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "d3-dsv": "^2.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -69,9 +73,12 @@
     "langchain": "^0.3.36",
     "mongoose": "^8.19.1",
     "morgan": "^1.10.1",
+    "multer": "^1.4.5-lts.1",
     "ngrok": "5.0.0-beta.2",
     "nodemailer": "^7.0.10",
     "ora": "^9.0.0",
+    "uuid": "^10.0.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.12"
   }
 }
