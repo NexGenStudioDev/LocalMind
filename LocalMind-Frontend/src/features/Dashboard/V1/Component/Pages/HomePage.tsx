@@ -13,7 +13,7 @@ import { useGSAP } from '@gsap/react'
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const HomePage: React.FC = () => {
-  // Typed array of feature objects
+  // Typed array of feature objects (acts as fetched data)
   const features: CardProps[] = [
     {
       title: 'Custom Models',
@@ -32,6 +32,15 @@ const HomePage: React.FC = () => {
       desc: 'Ultra-low latency sockets and secure REST APIs.',
     },
   ]
+
+  // ✅ EMPTY STATE UI (Issue #79)
+  if (!features || features.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#1E1E1E] text-gray-400">
+        No data available at the moment
+      </div>
+    )
+  }
 
   useGSAP(() => {
     const split = new SplitText('.about-para', {
@@ -68,6 +77,7 @@ const HomePage: React.FC = () => {
         </div>
         <img src={linesImg} alt="" className="absolute w-full -bottom-15" />
       </div>
+
       <div className="about w-full min-h-screen relative flex flex-col justify-center pt-10 font-Satoshi">
         <h1 className="text-white text-center uppercase text-3xl tracking-wider font-bold">
           About
