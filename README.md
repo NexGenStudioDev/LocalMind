@@ -1,5 +1,53 @@
-<div align="center">
-  <img src="assets/Banner_LocalMind.png" alt="LocalMind Banner" width="900"/>
+  <div align="center">
+
+# 🧠 LocalMind
+
+### **Your Data. Your AI. No Compromises.**
+
+**LocalMind** is a production-grade, open-source AI platform designed to bridge the gap between private local LLMs and powerful cloud intelligence.
+
+[![GitHub Stars](https://img.shields.io/github/stars/NexGenStudioDev/LocalMind?style=for-the-badge&logo=github&color=FFD700)](https://github.com/NexGenStudioDev/LocalMind/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+
+---
+
+[✨ Features](#-features) • [🚀 Quick Start](#-quick-start) • [🏗️ Architecture](#-architecture) • [🧩 API Docs](#-api-documentation) • [🤝 Contributing](#-contributing)
+
+<img src="assets/Banner_LocalMind.png" alt="LocalMind Banner" width="100%" style="border-radius: 10px; border: 1px solid #333;"/>
+
+</div>
+
+## 🌐 The AI Evolution
+LocalMind empowers you to move away from restrictive, subscription-based AI models. Run LLaMA, Mistral, or Gemini through a single, unified interface while keeping your data 100% private.
+
+---
+
+## 🏗️ Architecture
+
+The service follows **SOLID principles** and implements a **Clean Architecture**:
+
+```text
+EmailService (Main Orchestrator)
+┃
+┣━━ 📦 Providers (Strategy Pattern)
+┃   ┣━━ 🔹 ResendProvider (Primary)
+┃   ┣━━ 🔸 SendGridProvider (Fallback)
+┃   ┣━━ 📧 NodemailerProvider (SMTP)
+┃   ┗━━ 🧪 MockProviders (Testing)
+┃
+┣━━ 🛠️ Resilience Layers
+┃   ┣━━ 🔄 RetryManager ....... [Exponential Backoff]
+┃   ┣━━ 🚦 RateLimiter ........ [Token Bucket]
+┃   ┗━━ ⚡ CircuitBreaker ...... [Failure Detection]
+┃
+┣━━ 🛡️ Security & Integrity
+┃   ┣━━ 🔒 IdempotencyManager . [Duplicate Prevention]
+┃   ┗━━ 📋 Queue System ....... [Failed Email Recovery]
+┃
+┗━━ 📊 Observability
+    ┗━━ 📝 Logger ............. [Structured JSON Logging]
   <br/><br/>
   <h1><b>LocalMind — AI Without Limits</b></h1>
   <p>
