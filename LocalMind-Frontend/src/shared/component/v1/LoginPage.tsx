@@ -110,7 +110,7 @@ const LoginPage: React.FC = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-gray-500 hover:bg-gray-700 text-black font-semibold py-2 sm:py-2.5 text-sm sm:text-base rounded-lg transition-colors duration-200 mt-4 sm:mt-5 md:mt-6"
+              className="w-full bg-gray-300 hover:bg-gray-700 text-black font-semibold py-2 sm:py-2.5 text-sm sm:text-base rounded-lg transition-colors duration-200 mt-4 sm:mt-5 md:mt-6"
             >
               Log In
             </button>
