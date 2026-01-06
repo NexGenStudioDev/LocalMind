@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
 import axios from 'axios'
+import mongoose from 'mongoose'
+import crypto from 'crypto'
 import { env } from '../../../../constant/env.constant'
 import UserUtils from '../user.utils'
-import mongoose from 'mongoose'
+import User from '../user.model'
 
 const API_URL = env.BACKEND_URL
 
@@ -245,7 +247,6 @@ describe('Input Validation Edge Cases', () => {
       })
       expect(res.status).toBe(201)
     } catch (error: any) {
-      // If 409 means user exists, that's acceptable
       if (error.response?.status !== 409) {
         throw error
       }
@@ -282,7 +283,6 @@ describe('Login Endpoint Tests', () => {
       expect(res.data).toBeDefined()
       expect(res.data.message).toBeDefined()
     } catch (error: any) {
-      // User might not exist in test environment
       if (error.response?.status === 401 || error.response?.status === 404) {
         console.log('Test user not found, skipping login success test')
         expect(true).toBe(true)
@@ -317,6 +317,61 @@ describe('Login Endpoint Tests', () => {
       expect([401, 404]).toContain(error.response.status)
     }
   }, 10000)
+})
+
+describe('Password Reset Tests', () => {
+  const testEmail = env.YOUR_EMAIL || 'test@example.com'
+  // Generate a token we can control
+  const rawToken = 'test-reset-token-123'
+  const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex')
+
+  it('should send reset email (forgot password)', async () => {
+    const res = await axios.post(`${API_URL}/auth/forgot-password`, {
+      email: testEmail,
+    })
+
+    expect(res.status).toBe(200)
+    expect(res.data.message).toMatch(/reset link has been sent/i)
+  })
+
+  it('should successfully reset password with valid token', async () => {
+    // 1. Setup: Manually inject token into DB for the test user
+    const user = await User.findOne({ email: testEmail })
+    if (!user) throw new Error('Test user not found')
+
+    user.resetPasswordToken = hashedToken
+    user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000) // 10 mins from now
+    await user.save()
+
+    // 2. Call Reset Password Endpoint with RAW token
+    const newPassword = 'NewSecurePassword123!'
+    const res = await axios.post(`${API_URL}/auth/reset-password/${rawToken}`, {
+      password: newPassword,
+    })
+
+    expect(res.status).toBe(200)
+    expect(res.data.message).toMatch(/password reset successfully/i)
+
+    // 3. Verify Login with New Password works
+    const loginRes = await axios.post(`${API_URL}/user/login`, {
+      email: testEmail,
+      password: newPassword,
+    })
+    expect(loginRes.status).toBe(200)
+  })
+
+  it('should fail reset with invalid token', async () => {
+    try {
+      await axios.post(`${API_URL}/auth/reset-password/invalid-token`, {
+        password: 'NewPassword123!',
+      })
+      throw new Error('Should have failed')
+    } catch (error: any) {
+      expect(error.response.status).toBe(500) // or 400 depending on implementation
+      // Checking for "Invalid token" message we just added
+      expect(error.response.data.message).toMatch(/Invalid token/i)
+    }
+  })
 })
 
 afterAll(async () => {

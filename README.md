@@ -853,6 +853,28 @@ Content-Type: application/json
 }
 ```
 
+#### Forgot Password
+
+```http
+POST /api/v1/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "john@example.com"
+}
+```
+
+#### Reset Password
+
+```http
+POST /api/v1/auth/reset-password/:token
+Content-Type: application/json
+
+{
+  "password": "NewSecurePassword123!"
+}
+```
+
 #### Get User Profile
 
 ```http

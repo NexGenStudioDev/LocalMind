@@ -34,3 +34,27 @@ export async function loginUser(email: string, password: string): Promise<AuthRe
     throw new Error('Network error. Please try again.')
   }
 }
+
+export async function forgotPassword(email: string): Promise<any> {
+  try {
+    const response = await authApi.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email })
+    return response.data
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      throw new Error(error.response.data.message || 'Failed to send reset email')
+    }
+    throw new Error('Network error')
+  }
+}
+
+export async function resetPassword(token: string, password: string): Promise<any> {
+  try {
+    const response = await authApi.post(API_ENDPOINTS.AUTH.RESET_PASSWORD(token), { password })
+    return response.data
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      throw new Error(error.response.data.message || 'Failed to reset password')
+    }
+    throw new Error('Network error')
+  }
+}

@@ -30,7 +30,7 @@ class UserUtils {
         return {
           email: decoded.email as string,
           _id: decoded.userId as string,
-          role: decoded.role as string,
+          role: decoded.role as 'user' | 'admin' | 'creator',
         }
       }
 
@@ -115,7 +115,8 @@ class UserUtils {
   }
   public static sanitizeUser(user: IUser | null): Partial<IUser> | null {
     if (!user) return null
-    const userObj = typeof (user as any).toObject === 'function' ? (user as any).toObject() : { ...user }
+    const userObj =
+      typeof (user as any).toObject === 'function' ? (user as any).toObject() : { ...user }
 
     delete (userObj as { password?: string }).password
     delete (userObj as { __v?: number }).__v

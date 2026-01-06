@@ -320,6 +320,58 @@
             "description": "❌ Login with email that doesn't exist.\n\n**Expected:** 401 Unauthorized or 404 Not Found."
           },
           "response": []
+        },
+        {
+          "name": "14. Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "forgot-password"]
+            },
+            "description": "✅ Request password reset link.\n\n**Expected:** 200 OK."
+          },
+          "response": []
+        },
+        {
+          "name": "15. Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewSecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/reset-password/:token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "reset-password", ":token"],
+              "variable": [
+                {
+                  "key": "token",
+                  "value": "ENTER_TOKEN_HERE"
+                }
+              ]
+            },
+            "description": "✅ Reset password using token.\n\n**Expected:** 200 OK."
+          },
+          "response": []
         }
       ],
       "id": "auth-folder",
