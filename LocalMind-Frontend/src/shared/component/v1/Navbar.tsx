@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
           PlayGround
         </NavLink>
         <NavLink to="/contributors" className={navLinkClass}>
-         Contributors
+          Contributors
         </NavLink>
 
       </div>
