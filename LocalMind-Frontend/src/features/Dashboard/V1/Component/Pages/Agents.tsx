@@ -51,8 +51,8 @@ export default function Agents() {
     );
   };
 
-  const removeAgent = (index: number) => {
-    setAgents((prev) => prev.filter((_, i) => i !== index));
+    const removeAgent = (id: string) => {
+    setAgents((prev) => prev.filter((a) => a.id !== id));
   };
 
   return (
