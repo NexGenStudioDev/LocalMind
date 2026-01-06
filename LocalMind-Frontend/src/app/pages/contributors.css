@@ -1,0 +1,46 @@
+.cwrap { max-width: 1050px; margin: 0 auto; padding: 24px 16px 60px; }
+.chead h1 { margin: 0 0 8px; font-size: 34px; }
+.csub { margin: 0; opacity: 0.85; line-height: 1.5; }
+.csec { margin-top: 28px; }
+.csec h2 { margin: 0 0 12px; font-size: 20px; }
+
+.cgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.ccard { border: 1px solid rgba(0,0,0,0.12); border-radius: 12px; padding: 14px; background: #fff; }
+.ctop { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.cname { margin: 0; font-size: 16px; }
+.cpill { font-size: 12px; padding: 4px 8px; border-radius: 999px; background: rgba(0,0,0,0.06); }
+.cbio { margin: 10px 0; line-height: 1.45; opacity: 0.9; }
+
+.clinks { display: flex; gap: 12px; flex-wrap: wrap; }
+.clinks a { text-decoration: none; color: #2563eb; }
+.clinks a:hover { text-decoration: underline; }
+
+.ctags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+.ctag { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(0,0,0,0.12); }
+
+.clist { margin: 10px 0 0; padding-left: 18px; line-height: 1.6; }
+
+.cform { display: grid; gap: 10px; max-width: 650px; }
+.cform label { display: grid; gap: 6px; font-size: 13px; opacity: 0.95; }
+.cform input, .cform textarea {
+  width: 100%;
+  border: 1px solid rgba(0,0,0,0.16);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+}
+.cform textarea { min-height: 90px; resize: vertical; }
+
+.cactions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.cbtn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #111827;
+  color: white;
+  cursor: pointer;
+}
+.cbtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.clink { color: #2563eb; text-decoration: none; }
+.clink:hover { text-decoration: underline; }
