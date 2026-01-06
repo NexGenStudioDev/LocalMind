@@ -37,20 +37,11 @@ export default function Agents() {
     });
   };
 
-  const updateAgent = (index: number, updated: Agent) => {
+   const updateAgent = (id: string, updated: Agent) => {
     setAgents((prev) =>
-      prev.map((a, i) =>
-        i === index
-          ? {
-              ...updated,
-              priority: Number(updated.priority) || 1,
-              active: Boolean(updated.active),
-            }
-          : a
-      )
+      prev.map((a) => (a.id === id ? updated : a))
     );
   };
-
     const removeAgent = (id: string) => {
     setAgents((prev) => prev.filter((a) => a.id !== id));
   };
