@@ -2,6 +2,10 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from '../../features/Dashboard/V1/Component/Pages/HomePage'
 import LoginPage from '../../shared/component/v1/LoginPage'
+import ChatPage from '../../features/Dashboard/V1/Component/Pages/ChatPage'
+import DocumentsPage from '../../features/Dashboard/V1/Component/Pages/DocumentsPage'
+import SettingsPage from '../../features/Dashboard/V1/Component/Pages/SettingsPage'
+import APIPage from '../../features/Dashboard/V1/Component/Pages/APIPage'
 
 const AppRoutes: React.FC = () => {
   return (
@@ -9,16 +13,16 @@ const AppRoutes: React.FC = () => {
       {/* Homepage */}
       <Route path="/" element={<HomePage />} />
 
-      {/* Sign Up / Login Page */}
+      {/* Main Application Pages */}
+      <Route path="/chat" element={<ChatPage />} />
+      <Route path="/documents" element={<DocumentsPage />} />
+      <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/api" element={<APIPage />} />
+
+      {/* Authentication Pages */}
       <Route path="/login" element={<LoginPage />} />
-
-      {/* Register Page - TODO: Create dedicated RegisterPage component */}
       <Route path="/register" element={<LoginPage />} />
-
-      {/* Forgot Password Page - TODO: Create ForgotPasswordPage component */}
       <Route path="/forgot-password" element={<LoginPage />} />
-
-      {/* Chat Page */}
     </Routes>
   )
 }
