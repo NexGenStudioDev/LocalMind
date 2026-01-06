@@ -66,30 +66,7 @@ class AIProviderRegistry {
   }
 
   // --------------------
-  // Safe execution
-  // --------------------
-
-  async generateTextSafe(
-    providerName: string,
-    input: { prompt: string; context?: string }
-  ): Promise<string> {
-    const provider = this.providers.get(providerName)
-    if (!provider) {
-      throw new Error(`Provider "${providerName}" not found`)
-    }
-
-    try {
-      const result = await provider.generateText(input)
-      this.markSuccess(provider.name)
-      return result
-    } catch (err) {
-      this.markFailure(provider.name)
-      throw err
-    }
-  }
-
-  // --------------------
-  // 🆕 Fallback routing
+  // Safe execution with proper fallback
   // --------------------
 
   async generateTextWithFallback(
@@ -97,24 +74,45 @@ class AIProviderRegistry {
     input: { prompt: string; context?: string }
   ): Promise<string> {
     const candidates = this.findByCapabilities(capabilities)
+    const healthyProviders = candidates.filter(p => this.isHealthy(p.name))
+    const degradedProviders = candidates.filter(p => !this.isHealthy(p.name))
+    let lastError: unknown
 
-    for (const provider of candidates) {
-      if (!this.isHealthy(provider.name)) continue
-
+    // 1️⃣ Try all healthy providers first
+    for (const provider of healthyProviders) {
       try {
         const result = await provider.generateText(input)
         this.markSuccess(provider.name)
         return result
-      } catch {
+      } catch (err) {
+        lastError = err
         this.markFailure(provider.name)
       }
     }
 
-    throw new Error('No healthy AI provider available')
+    // 2️⃣ Fall back to degraded providers if all healthy ones failed
+    for (const provider of degradedProviders) {
+      try {
+        const result = await provider.generateText(input)
+        this.markSuccess(provider.name)
+        return result
+      } catch (err) {
+        lastError = err
+        this.markFailure(provider.name)
+      }
+    }
+
+    // 3️⃣ Throw the last error encountered (preserves stack trace and error details)
+    if (lastError) {
+      throw lastError
+    }
+
+    // 4️⃣ If no providers matched capabilities at all
+    throw new Error('No AI provider available for the specified capabilities')
   }
 }
 
 export const aiProviderRegistry = new AIProviderRegistry()
 
-// register providers (safe)
+// Register providers
 aiProviderRegistry.register(new GeminiProvider())
