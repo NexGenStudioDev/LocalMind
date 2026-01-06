@@ -1,0 +1,77 @@
+import { useMemo, useState } from "react";
+import AgentCard from "../AgentCard";
+
+type AgentType = "" | "planner" | "executor";
+
+import type { Agent } from "./types";
+
+const MAX_AGENTS = 7;
+
+function createAgent(): Agent {
+  return {
+    id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+
+    name: "",
+    type: "",
+    systemPrompt: "",
+    task: "",
+    priority: 1,
+    active: true,
+    tools: [],
+  };
+}
+
+export default function Agents() {
+  const [agents, setAgents] = useState<Agent[]>([]);
+
+  const canAddMore = agents.length < MAX_AGENTS;
+
+  const headerText = useMemo(() => {
+    return `Agents (${agents.length}/${MAX_AGENTS})`;
+  }, [agents.length]);
+
+  const addAgent = () => {
+    setAgents((prev) => {
+      if (prev.length >= MAX_AGENTS) return prev;
+      return [...prev, createAgent()];
+    });
+  };
+
+   const updateAgent = (id: string, updated: Agent) => {
+    setAgents((prev) =>
+      prev.map((a) => (a.id === id ? updated : a))
+    );
+  };
+    const removeAgent = (id: string) => {
+    setAgents((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <h1 style={{ margin: 0 }}>{headerText}</h1>
+
+        <div style={{ marginLeft: "auto" }}>
+          <button onClick={addAgent} disabled={!canAddMore}>
+            Add Agent
+          </button>
+        </div>
+      </div>
+
+      {agents.length === 0 ? (
+        <p style={{ opacity: 0.75, margin: 0 }}>
+          No agents yet. Click “Add Agent” to create one.
+        </p>
+      ) : (
+        agents.map((agent, index) => (
+          <AgentCard
+            key={agent.id}
+            agent={agent}
+                        onChange={(updated: Agent) => updateAgent(agent.id, updated)}
+            onRemove={() => removeAgent(agent.id)}
+          />
+        ))
+      )}
+    </div>
+  );
+}
