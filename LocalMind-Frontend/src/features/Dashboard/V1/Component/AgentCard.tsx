@@ -1,13 +1,18 @@
 import React from "react";
 
+export type AgentType = "" | "planner" | "executor";
+
 export type Agent = {
-  id: number;
+  id: string;
   name: string;
-  type: string;
+  type: AgentType;
   systemPrompt: string;
+  task: string;
   priority: number;
-  enabled: boolean;
+  active: boolean;
+  tools: string[];
 };
+
 
 type Props = {
   agent: Agent;
