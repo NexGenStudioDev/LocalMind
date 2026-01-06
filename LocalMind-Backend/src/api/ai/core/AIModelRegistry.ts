@@ -9,18 +9,20 @@ export type AIModel = {
 }
 
 class AIModelRegistry {
-  private models: AIModel[] = [
-    {
-      id: 'gemini-pro',
-      provider: 'gemini',
-      capabilities: ['cloud'],
-    },
-    {
-      id: 'gemini-pro-vision',
-      provider: 'gemini',
-      capabilities: ['cloud', 'multimodal'],
-    },
-  ]
+  private models: AIModel[] = []
+
+  // --------------------
+  // Model management
+  // --------------------
+
+  register(model: AIModel) {
+    if (this.models.some(m => m.id === model.id && m.provider === model.provider)) {
+      throw new Error(
+        `Model "${model.id}" from provider "${model.provider}" is already registered.`
+      )
+    }
+    this.models.push(model)
+  }
 
   listProviders(): string[] {
     return [...new Set(this.models.map(m => m.provider))]
@@ -35,6 +37,23 @@ class AIModelRegistry {
       m => m.provider === provider && m.id === modelId
     )
   }
+
+  listAll(): AIModel[] {
+    return [...this.models]
+  }
 }
 
 export const aiModelRegistry = new AIModelRegistry()
+
+// Register default models
+aiModelRegistry.register({
+  id: 'gemini-pro',
+  provider: 'gemini',
+  capabilities: ['cloud'],
+})
+
+aiModelRegistry.register({
+  id: 'gemini-pro-vision',
+  provider: 'gemini',
+  capabilities: ['cloud', 'multimodal'],
+})

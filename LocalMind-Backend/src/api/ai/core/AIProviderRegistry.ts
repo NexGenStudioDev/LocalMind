@@ -9,6 +9,7 @@ type ProviderHealth = {
 }
 
 const MAX_FAILURES = 3
+const COOLDOWN_PERIOD_MS = 300000 // 5 minutes
 
 class AIProviderRegistry {
   private providers = new Map<string, AIProvider>()
@@ -44,13 +45,24 @@ class AIProviderRegistry {
   }
 
   // --------------------
-  // Health tracking
+  // Health tracking with cooldown recovery
   // --------------------
 
   private isHealthy(providerName: string): boolean {
     const info = this.health.get(providerName)
     if (!info) return true
-    return info.failures < MAX_FAILURES
+
+    if (info.failures < MAX_FAILURES) {
+      return true
+    }
+
+    // Allow retry after cooldown period
+    if (info.lastFailureAt && Date.now() - info.lastFailureAt > COOLDOWN_PERIOD_MS) {
+      this.markSuccess(providerName) // Reset health to allow retry
+      return true
+    }
+
+    return false
   }
 
   private markFailure(providerName: string) {
@@ -75,7 +87,7 @@ class AIProviderRegistry {
   async generateTextWithModel(
     providerName: string,
     modelId: string,
-    input: { prompt: string; context?: string }
+    input: { prompt: string }
   ): Promise<string> {
     const provider = this.get(providerName)
 
