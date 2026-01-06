@@ -4,7 +4,9 @@ import { NavLink } from 'react-router-dom'
 
 const Navbar: React.FC = () => {
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    isActive ? 'text-white line-through opacity-80' : 'text-white'
+  isActive
+    ? 'text-blue-400 font-semibold underline underline-offset-8'
+    : 'text-white hover:text-blue-300 transition-colors'
 
   return (
     <div className="fixed top-2 left-1/2 z-30 flex gap-x-50 items-center justify-between -translate-x-1/2 bg-zinc-900/40 backdrop-blur-md px-5 py-2 rounded-full border border-zinc-500/50 text-white">
