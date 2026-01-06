@@ -109,11 +109,11 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen bg-[#292828] flex flex-col items-center justify-center p-3 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-[#292828] flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 pt-16 sm:pt-16 md:pt-20">
       <style>{glowStyles}</style>
 
       {/* Card Container */}
-      <div className="w-full max-w-7xl bg-[#181818] rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+      <div className="w-full max-w-7xl bg-[#181818] rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         {/* Left Section - Form */}
         <div className="bg-[#181818] p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 flex flex-col justify-center">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
@@ -132,8 +132,8 @@ export default function SignUp() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Row 1: Full Name & Role */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-1.5 relative">
                 <label className="text-gray-200 text-xs sm:text-sm font-semibold">Full Name</label>
                 <input
                   name="firstName"
@@ -142,15 +142,17 @@ export default function SignUp() {
                   value={formData.firstName}
                   onChange={handleChange}
                   disabled={loading}
-                  className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
+                  className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
                     errors.firstName ? 'border-red-500' : ''
                   }`}
                 />
                 {errors.firstName && (
-                  <span className="text-xs text-red-400">{errors.firstName}</span>
+                  <span className="text-xs text-red-400 absolute -bottom-5 left-0">
+                    {errors.firstName}
+                  </span>
                 )}
               </div>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 relative">
                 <label className="text-gray-200 text-xs sm:text-sm font-semibold">Role</label>
                 <input
                   name="role"
@@ -159,17 +161,21 @@ export default function SignUp() {
                   value={formData.role}
                   onChange={handleChange}
                   disabled={loading}
-                  className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
+                  className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
                     errors.role ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.role && <span className="text-xs text-red-400">{errors.role}</span>}
+                {errors.role && (
+                  <span className="text-xs text-red-400 absolute -bottom-5 left-0">
+                    {errors.role}
+                  </span>
+                )}
               </div>
             </div>
 
             {/* Row 2: Email & Birth Place */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-1.5 relative">
                 <label className="text-gray-200 text-xs sm:text-sm font-semibold">Email</label>
                 <input
                   name="email"
@@ -178,13 +184,17 @@ export default function SignUp() {
                   value={formData.email}
                   onChange={handleChange}
                   disabled={loading}
-                  className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
+                  className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
                     errors.email ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.email && <span className="text-xs text-red-400">{errors.email}</span>}
+                {errors.email && (
+                  <span className="text-xs text-red-400 absolute -bottom-5 left-0">
+                    {errors.email}
+                  </span>
+                )}
               </div>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 relative">
                 <label className="text-gray-200 text-xs sm:text-sm font-semibold">
                   Birth Place
                 </label>
@@ -195,19 +205,21 @@ export default function SignUp() {
                   value={formData.birthPlace}
                   onChange={handleChange}
                   disabled={loading}
-                  className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
+                  className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
                     errors.birthPlace ? 'border-red-500' : ''
                   }`}
                 />
                 {errors.birthPlace && (
-                  <span className="text-xs text-red-400">{errors.birthPlace}</span>
+                  <span className="text-xs text-red-400 absolute -bottom-5 left-0">
+                    {errors.birthPlace}
+                  </span>
                 )}
               </div>
             </div>
 
             {/* Row 3: Location & Password */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-1.5 relative">
                 <label className="text-gray-200 text-xs sm:text-sm font-semibold">Location</label>
                 <input
                   name="location"
@@ -216,13 +228,17 @@ export default function SignUp() {
                   value={formData.location}
                   onChange={handleChange}
                   disabled={loading}
-                  className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
+                  className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
                     errors.location ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.location && <span className="text-xs text-red-400">{errors.location}</span>}
+                {errors.location && (
+                  <span className="text-xs text-red-400 absolute -bottom-5 left-0">
+                    {errors.location}
+                  </span>
+                )}
               </div>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 relative">
                 <label className="text-gray-200 text-xs sm:text-sm font-semibold">Password</label>
                 <div className="relative">
                   <input
@@ -232,7 +248,7 @@ export default function SignUp() {
                     value={formData.password}
                     onChange={handleChange}
                     disabled={loading}
-                    className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
+                    className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
                       errors.password ? 'border-red-500' : ''
                     }`}
                   />
@@ -279,12 +295,16 @@ export default function SignUp() {
                     )}
                   </button>
                 </div>
-                {errors.password && <span className="text-xs text-red-400">{errors.password}</span>}
+                {errors.password && (
+                  <span className="text-xs text-red-400 absolute -bottom-5 left-0">
+                    {errors.password}
+                  </span>
+                )}
               </div>
             </div>
 
             {/* Row 4: Portfolio URL */}
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 relative">
               <label className="text-gray-200 text-xs sm:text-sm font-semibold">
                 Portfolio Url
               </label>
@@ -295,17 +315,19 @@ export default function SignUp() {
                 value={formData.portfolioUrl}
                 onChange={handleChange}
                 disabled={loading}
-                className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
+                className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition ${
                   errors.portfolioUrl ? 'border-red-500' : ''
                 }`}
               />
               {errors.portfolioUrl && (
-                <span className="text-xs text-red-400">{errors.portfolioUrl}</span>
+                <span className="text-xs text-red-400 absolute -bottom-5 left-0">
+                  {errors.portfolioUrl}
+                </span>
               )}
             </div>
 
             {/* Row 5: Bio */}
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 relative">
               <label htmlFor="bio" className="text-gray-200 text-xs sm:text-sm font-semibold">
                 Bio
               </label>
@@ -317,11 +339,13 @@ export default function SignUp() {
                 value={formData.bio}
                 onChange={handleChange}
                 disabled={loading}
-                className={`w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition resize-none ${
+                className={`w-full px-4 py-3 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition resize-none ${
                   errors.bio ? 'border-red-500' : ''
                 }`}
               />
-              {errors.bio && <span className="text-xs text-red-400">{errors.bio}</span>}
+              {errors.bio && (
+                <span className="text-xs text-red-400 absolute -bottom-5 left-0">{errors.bio}</span>
+              )}
             </div>
 
             {/* Submit Button */}
@@ -363,7 +387,7 @@ export default function SignUp() {
         </div>
 
         {/* Right Side - Robot Image */}
-        <div className="bg-gradient-to-br from-gray-700 to-gray-900 hidden md:flex items-center justify-center overflow-hidden">
+        <div className="bg-gradient-to-br from-gray-700 to-gray-900 hidden lg:flex items-center justify-center overflow-hidden">
           <img
             src={robotImage}
             alt="AI Robot"
