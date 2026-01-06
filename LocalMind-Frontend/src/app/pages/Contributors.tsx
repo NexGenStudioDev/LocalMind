@@ -88,10 +88,10 @@ export default function ContributorsPage() {
                 <a href={`mailto:${c.email}`} target="_blank" rel="noreferrer">
                   {c.email}
                 </a>
-                <a href={c.github} target="_blank" rel="noreferrer">
+                <a href={c.github} target="_blank" rel="noopener noreferrer">
                   GitHub
                 </a>
-                <a href={c.linkedin} target="_blank" rel="noreferrer">
+                <a href={c.linkedin} target="_blank" rel="noopener noreferrer">
                   LinkedIn
                 </a>
               </div>
