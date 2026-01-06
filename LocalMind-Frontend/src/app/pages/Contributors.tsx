@@ -165,7 +165,7 @@ export default function ContributorsPage() {
             <button
               className="cbtn"
               disabled={!issueUrl}
-              onClick={() => window.open(issueUrl, "_blank", "noreferrer")}
+              onClick={() => window.open(issueUrl, "_blank", "noopener,noreferrer")}
               type="button"
               title={!issueUrl ? "Fill all required fields first" : "Open GitHub issue"}
             >
