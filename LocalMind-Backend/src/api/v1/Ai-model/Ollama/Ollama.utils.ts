@@ -2,7 +2,7 @@ import axios from 'axios'
 import { env } from '../../../../constant/env.constant'
 
 class OllamaUtils {
-  async isModelAvailable(modelName: string): Promise<boolean> {
+  async assertModelAvailable(modelName: string): Promise<boolean> {
     try {
       const response = await axios.get(`${env.OLLAMA_HOST}/api/tags`)
 

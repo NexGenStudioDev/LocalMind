@@ -5,7 +5,7 @@ import OllamaController from './Ollama.controller'
 const router: Router = Router()
 
 // Chat endpoint
-router.post('/v1/chat-with-ollama', OllamaController.ChartWithOllama)
+router.post('/v1/chat-with-ollama', OllamaController.ChatWithOllama)
 
 // Health check and status
 router.get('/v1/ollama/status', OllamaController.checkOllamaStatus)

@@ -6,7 +6,7 @@ import axios from 'axios'
 import { env } from '../../../../constant/env.constant'
 
 class OllamaController {
-  async ChartWithOllama(req: Request, res: Response) {
+  async ChatWithOllama(req: Request, res: Response) {
     try {
       const { prompt, model } = req.body
 
@@ -35,7 +35,7 @@ class OllamaController {
         {
           status: 'online',
           host: env.OLLAMA_HOST,
-          models: models.map((m: any) => ({
+          models: models.map((m: { name: string; size: number; modified_at: string }) => ({
             name: m.name,
             size: m.size,
             modified: m.modified_at,
@@ -64,7 +64,16 @@ class OllamaController {
 
       SendResponse.success(res, 'Models retrieved successfully', { models, count: models.length }, 200)
     } catch (error: any) {
-      SendResponse.error(res, 'Failed to list models', 500, error)
+      if (error.code === 'ECONNREFUSED' || error.code === 'ECONNRESET') {
+        SendResponse.error(
+          res,
+          'Ollama server is not running. Please start it using: ollama serve',
+          503,
+          { host: env.OLLAMA_HOST }
+        )
+      } else {
+        SendResponse.error(res, 'Failed to list models', 500, error)
+      }
     }
   }
 

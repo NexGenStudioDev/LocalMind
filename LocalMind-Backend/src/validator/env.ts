@@ -54,5 +54,5 @@ export const EnvSchema = z.object({
   BACKEND_URL: z.string().default('http://localhost:5000'),
 
   OLLAMA_HOST: z.string().default('http://localhost:11434'),
-  OLLAMA_DEFAULT_MODEL: z.string().default('llama3'),
+
 })
