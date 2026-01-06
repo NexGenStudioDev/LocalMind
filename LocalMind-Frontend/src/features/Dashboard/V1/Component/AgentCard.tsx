@@ -60,9 +60,9 @@ const AgentCard: React.FC<Props> = ({ agent, onChange, onRemove }) => {
       <label>
         <input
           type="checkbox"
-          checked={agent.enabled}
+          checked={agent.active}
           onChange={(e) =>
-            onChange({ ...agent, enabled: e.target.checked })
+            onChange({ ...agent, active: e.target.checked })
           }
         />
         Enabled
