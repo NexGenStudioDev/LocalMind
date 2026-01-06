@@ -40,7 +40,7 @@ export default function ContributorsPage() {
   const [area, setArea] = useState("");
   const [tags, setTags] = useState("");
 
-  const list = useMemo(() => CONTRIBUTORS, []);
+  const list = CONTRIBUTORS;
 
   const issueUrl = useMemo(() => {
     const c: Contributor = {
