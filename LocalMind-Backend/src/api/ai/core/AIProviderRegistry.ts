@@ -16,15 +16,17 @@ class AIProviderRegistry {
 }
 
 
+
   get(name: string): AIProvider | undefined {
     return this.providers.get(name)
   }
 
-  findByCapabilities(capabilities: AICapability[]): AIProvider[] {
+ findByCapabilities(capabilities: AICapability[]): AIProvider[] {
   return Array.from(this.providers.values()).filter(provider =>
     capabilities.every(cap => provider.supports(cap))
   )
 }
+
 
   list(): AIProvider[] {
     return Array.from(this.providers.values())
