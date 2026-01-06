@@ -17,10 +17,12 @@ This module provides a robust pipeline for managing AI training data, supporting
 ### 1. Training Samples (Manual CRUD)
 
 #### **Create Training Sample**
+
 - **Method**: `POST`
 - **Route**: `/api/v1/training-samples`
 - **Description**: Creates a new training entry and generates a vector embedding for it.
 - **Example Request**:
+
 ```json
 {
   "question": "What is LocalMind?",
@@ -35,7 +37,9 @@ This module provides a robust pipeline for managing AI training data, supporting
   "language": "en"
 }
 ```
+
 - **Example Response**:
+
 ```json
 {
   "success": true,
@@ -52,6 +56,7 @@ This module provides a robust pipeline for managing AI training data, supporting
 ```
 
 #### **List Training Samples (Paginated)**
+
 - **Method**: `GET`
 - **Route**: `/api/v1/training-samples`
 - **Query Params**:
@@ -60,7 +65,7 @@ This module provides a robust pipeline for managing AI training data, supporting
   - `type`: Filter by type (qa, snippet, etc.)
   - `isActive`: Boolean string ('true'/'false')
   - `sourceType`: 'manual' or 'dataset'
-- **Data Paged**: 
+- **Data Paged**:
   - `data`: Array of samples (excluding large embedding vectors for performance).
   - `total`: Total records matching filter.
   - `page`: Current page.
@@ -72,10 +77,12 @@ This module provides a robust pipeline for managing AI training data, supporting
 ### 2. Semantic Vector Search
 
 #### **Search Training Data**
+
 - **Method**: `POST`
 - **Route**: `/api/v1/training-samples/search`
 - **Description**: Finds the top K most semantically similar training samples for a given query.
 - **Example Request**:
+
 ```json
 {
   "query": "how to setup local models?",
@@ -83,7 +90,9 @@ This module provides a robust pipeline for managing AI training data, supporting
   "filters": { "isActive": true }
 }
 ```
+
 - **Example Response**:
+
 ```json
 {
   "success": true,
@@ -102,6 +111,7 @@ This module provides a robust pipeline for managing AI training data, supporting
 ### 3. Dataset File Management
 
 #### **Upload Dataset File**
+
 - **Method**: `POST`
 - **Route**: `/api/v1/training-datasets/upload`
 - **Content-Type**: `multipart/form-data`
@@ -109,6 +119,7 @@ This module provides a robust pipeline for managing AI training data, supporting
 - **Supported Formats**: `.pdf`, `.csv`, `.xlsx`, `.json`, `.txt`, `.md`
 
 #### **Process Dataset**
+
 - **Method**: `POST`
 - **Route**: `/api/v1/training-datasets/:id/process`
 - **Description**: Triggers the background worker to parse the file, generate embeddings, and create training samples.
