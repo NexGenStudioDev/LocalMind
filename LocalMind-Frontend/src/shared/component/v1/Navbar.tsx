@@ -1,6 +1,8 @@
 import React from 'react'
 import Artificialintelligence from '../../../assets/Artificial intelligence.png'
 import { NavLink } from 'react-router-dom'
+import { NavLink } from "react-router-dom";
+
 
 const Navbar: React.FC = () => {
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -26,6 +28,10 @@ const Navbar: React.FC = () => {
         <NavLink to="/play-ground" className={navLinkClass}>
           PlayGround
         </NavLink>
+        <NavLink to="/contributors" className={navLinkClass}>
+         Contributors
+        </NavLink>
+
       </div>
 
       <NavLink
