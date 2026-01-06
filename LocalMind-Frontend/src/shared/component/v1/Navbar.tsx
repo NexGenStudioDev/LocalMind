@@ -1,7 +1,6 @@
 import React from 'react'
 import Artificialintelligence from '../../../assets/Artificial intelligence.png'
 import { NavLink } from 'react-router-dom'
-import { NavLink } from "react-router-dom";
 
 
 const Navbar: React.FC = () => {
