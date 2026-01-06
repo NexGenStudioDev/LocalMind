@@ -4,7 +4,7 @@ import GroqService from './Groq.service'
 import GROQ_TYPE from './Groq.constant'
 
 class GroqController {
-  async generateChartWithGroq(req: Request, res: Response) {
+  async generateChatWithGroq(req: Request, res: Response) {
     try {
       const { model, apiKey, message } = req.body
 
