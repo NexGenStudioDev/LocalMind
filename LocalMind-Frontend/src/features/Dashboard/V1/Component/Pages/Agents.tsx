@@ -18,7 +18,8 @@ const MAX_AGENTS = 7;
 
 function createAgent(): Agent {
   return {
-    id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : String(Date.now()),
+    id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+
     name: "",
     type: "",
     systemPrompt: "",
