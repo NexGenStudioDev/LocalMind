@@ -1,18 +1,17 @@
 import React, { useMemo, useState } from "react";
 import { CONTRIBUTORS, type Contributor } from "../../data/contributors";
-import "./contributors.css";
+import s from "./contributors.module.css";
 
 const REPO_ISSUE_NEW_URL = "https://github.com/NexGenStudioDev/LocalMind/issues/new";
 
-function enc(s: string) {
-  return encodeURIComponent(s);
+function enc(x: string) {
+  return encodeURIComponent(x);
 }
 
 function buildNewIssueUrl(c: Contributor) {
   const title = `Add contributor: ${c.name}`;
 
-  const body =
-`Hi maintainers,
+  const body = `Hi maintainers,
 Please add me to the Contributors page.
 
 Name: ${c.name}
@@ -56,35 +55,35 @@ export default function ContributorsPage() {
         .filter(Boolean),
     };
 
-    const requiredOk =
-      c.name && c.email && c.github && c.linkedin && c.bio;
-
-    return requiredOk ? buildNewIssueUrl(c) : "";
+    return c.name && c.email && c.github && c.linkedin && c.bio
+      ? buildNewIssueUrl(c)
+      : "";
   }, [name, email, github, linkedin, bio, area, tags]);
 
   return (
-    <div className="cwrap">
-      <header className="chead">
+    <div className={s.cwrap}>
+      <header className={s.chead}>
         <h1>Contributors</h1>
-        <p className="csub">
-          This project grows because people like you show up and help.
-          Beginners are welcome, and no contribution is too small.
+        <p className={s.csub}>
+          This project grows because people like you show up and help. Beginners
+          are welcome, and no contribution is too small.
         </p>
       </header>
 
-      <section className="csec">
+      <section className={s.csec}>
         <h2>People who contributed</h2>
-        <div className="cgrid">
+
+        <div className={s.cgrid}>
           {list.map((c) => (
-            <article key={c.github + c.email} className="ccard">
-              <div className="ctop">
-                <h3 className="cname">{c.name}</h3>
-                {c.area ? <span className="cpill">{c.area}</span> : null}
+            <article key={c.github + c.email} className={s.ccard}>
+              <div className={s.ctop}>
+                <h3 className={s.cname}>{c.name}</h3>
+                {c.area ? <span className={s.cpill}>{c.area}</span> : null}
               </div>
 
-              <p className="cbio">{c.bio}</p>
+              <p className={s.cbio}>{c.bio}</p>
 
-              <div className="clinks">
+              <div className={s.clinks}>
                 <a href={`mailto:${c.email}`} target="_blank" rel="noreferrer">
                   {c.email}
                 </a>
@@ -97,9 +96,11 @@ export default function ContributorsPage() {
               </div>
 
               {c.tags && c.tags.length ? (
-                <div className="ctags">
+                <div className={s.ctags}>
                   {c.tags.map((t) => (
-                    <span key={t} className="ctag">{t}</span>
+                    <span key={t} className={s.ctag}>
+                      {t}
+                    </span>
                   ))}
                 </div>
               ) : null}
@@ -108,9 +109,9 @@ export default function ContributorsPage() {
         </div>
       </section>
 
-      <section className="csec">
+      <section className={s.csec}>
         <h2>How to become a contributor</h2>
-        <ul className="clist">
+        <ul className={s.clist}>
           <li>Pick an issue labeled “good first issue” (or any small task).</li>
           <li>Fork the repo, create a new branch, and make a focused change.</li>
           <li>Open a pull request and describe what you changed and why.</li>
@@ -118,52 +119,81 @@ export default function ContributorsPage() {
         </ul>
       </section>
 
-      <section className="csec">
+      <section className={s.csec}>
         <h2>Add your details</h2>
-        <p className="csub">
-          Fill the fields below and click “Create request”.
-          It will open a GitHub issue with your details prefilled.
+
+        <p className={s.csub}>
+          Fill the fields below and click “Create request”. It will open a
+          GitHub issue with your details prefilled.
         </p>
 
-        <div className="cform">
+        <div className={s.cform}>
           <label>
             Name *
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your full name" />
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your full name"
+            />
           </label>
 
           <label>
             Email *
-            <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
           </label>
 
           <label>
             GitHub profile link *
-            <input value={github} onChange={(e) => setGithub(e.target.value)} placeholder="https://github.com/username" />
+            <input
+              value={github}
+              onChange={(e) => setGithub(e.target.value)}
+              placeholder="https://github.com/username"
+            />
           </label>
 
           <label>
             LinkedIn profile link *
-            <input value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://www.linkedin.com/in/username/" />
+            <input
+              value={linkedin}
+              onChange={(e) => setLinkedin(e.target.value)}
+              placeholder="https://www.linkedin.com/in/username/"
+            />
           </label>
 
           <label>
             Short bio *
-            <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="2–3 lines about you" />
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="2–3 lines about you"
+            />
           </label>
 
           <label>
             Area of contribution (optional)
-            <input value={area} onChange={(e) => setArea(e.target.value)} placeholder="Docs / Frontend / Backend / Design..." />
+            <input
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
+              placeholder="Docs / Frontend / Backend / Design..."
+            />
           </label>
 
           <label>
             Tags (optional, comma-separated)
-            <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="react, typescript, ui" />
+            <input
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="react, typescript, ui"
+            />
           </label>
 
-          <div className="cactions">
+          <div className={s.cactions}>
             <button
-              className="cbtn"
+              className={s.cbtn}
               disabled={!issueUrl}
               onClick={() => window.open(issueUrl, "_blank", "noopener,noreferrer")}
               type="button"
@@ -172,7 +202,12 @@ export default function ContributorsPage() {
               Create request (opens GitHub)
             </button>
 
-            <a className="clink" href={REPO_ISSUE_NEW_URL} target="_blank" rel="noreferrer">
+            <a
+              className={s.clink}
+              href={REPO_ISSUE_NEW_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
               Or open a blank issue
             </a>
           </div>
