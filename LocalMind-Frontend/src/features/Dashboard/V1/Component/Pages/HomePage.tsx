@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import tubeImg from '../../../../../assets/tubeImg.png'
 import blobImg from '../../../../../assets/blobImg.png'
 import waveImg from '../../../../../assets/waveImg.png'
@@ -6,6 +7,8 @@ import globeImg from '../../../../../assets/globeImg.png'
 import linesImg from '../../../../../assets/linesImg.png'
 import Card from '../../../../../shared/component/v1/Card'
 import type { CardProps } from '../../../../../types/Interfaces'
+import InlineLoader from '../Loader/InlineLoader'
+import EmptyState from '../EmptyState'
 import gsap from 'gsap'
 import { ScrollTrigger, SplitText } from 'gsap/all'
 import { useGSAP } from '@gsap/react'
@@ -13,30 +16,38 @@ import { useGSAP } from '@gsap/react'
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const HomePage: React.FC = () => {
-  // Typed array of feature objects
-  const features: CardProps[] = [
-    {
-      title: 'Custom Models',
-      desc: 'Train and deploy custom AI models lightning fast.',
-    },
-    {
-      title: 'Model Supports',
-      desc: 'Supports GPT, Llama, Stability and more AI engines.',
-    },
-    {
-      title: 'AI Chat Section',
-      desc: 'Next-gen real-time AI chat system, built for speed.',
-    },
-    {
-      title: 'Socket & REST APIs',
-      desc: 'Ultra-low latency sockets and secure REST APIs.',
-    },
-  ]
+  const [features, setFeatures] = useState<CardProps[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Simulate async fetch (realistic frontend pattern)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFeatures([
+        {
+          title: 'Custom Models',
+          desc: 'Train and deploy custom AI models lightning fast.',
+        },
+        {
+          title: 'Model Supports',
+          desc: 'Supports GPT, Llama, Stability and more AI engines.',
+        },
+        {
+          title: 'AI Chat Section',
+          desc: 'Next-gen real-time AI chat system, built for speed.',
+        },
+        {
+          title: 'Socket & REST APIs',
+          desc: 'Ultra-low latency sockets and secure REST APIs.',
+        },
+      ])
+      setIsLoading(false)
+    }, 1200)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   useGSAP(() => {
-    const split = new SplitText('.about-para', {
-      type: 'words',
-    })
+    const split = new SplitText('.about-para', { type: 'words' })
     gsap.from(split.words, {
       opacity: 0,
       y: 20,
@@ -68,6 +79,27 @@ const HomePage: React.FC = () => {
         </div>
         <img src={linesImg} alt="" className="absolute w-full -bottom-15" />
       </div>
+
+      {/* Features Section (Loading / Empty / Data) */}
+      <div className="py-20 px-10">
+        {isLoading && <InlineLoader />}
+
+        {!isLoading && features.length === 0 && (
+          <EmptyState
+            title="No features found"
+            description="Features will appear here once available."
+          />
+        )}
+
+        {!isLoading && features.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <Card key={feature.title} {...feature} />
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="about w-full min-h-screen relative flex flex-col justify-center pt-10 font-Satoshi">
         <h1 className="text-white text-center uppercase text-3xl tracking-wider font-bold">
           About
@@ -77,10 +109,8 @@ const HomePage: React.FC = () => {
           wants to use AI without paying expensive fees or worrying about usage limits.
         </p>
         <p className="about-para w-2/3 mx-auto text-center text-xl mt-15">
-          With LocalMind, you can run powerful AI models directly on your computer (like Mistral or
-          LLaMA) or connect to cloud models (like Gemini) using your own API key — which is stored
-          safely on your device. You can even upload Excel files to teach your AI more things, and
-          expose your local port so others can access your AI too!
+          With LocalMind, you can run powerful AI models directly on your computer or connect to
+          cloud models using your own API key.
         </p>
       </div>
     </div>
