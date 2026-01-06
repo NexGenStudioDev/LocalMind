@@ -67,8 +67,8 @@ export default function Agents() {
           <AgentCard
             key={agent.id}
             agent={agent}
-            onChange={(updated: Agent) => updateAgent(index, updated)}
-            onRemove={() => removeAgent(index)}
+                        onChange={(updated: Agent) => updateAgent(agent.id, updated)}
+            onRemove={() => removeAgent(agent.id)}
           />
         ))
       )}
