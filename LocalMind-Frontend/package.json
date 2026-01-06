@@ -16,9 +16,12 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@tailwindcss/vite": "^4.1.17",
+    "axios": "^1.13.2",
     "gsap": "^3.13.0",
+    "lucide-react": "^0.562.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-dropzone": "^14.3.8",
     "react-router-dom": "^7.9.6",
     "tailwindcss": "^4.1.17"
   },
