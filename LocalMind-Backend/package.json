@@ -50,6 +50,7 @@
     "@langchain/google-genai": "^0.2.18",
     "@langchain/groq": "^0.2.4",
     "@langchain/ollama": "^0.2.4",
+    "@langchain/openai": "^1.2.0",
     "@types/cookie-parser": "^1.4.9",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.97",
