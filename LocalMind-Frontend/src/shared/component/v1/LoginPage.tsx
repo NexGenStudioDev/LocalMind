@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import robotImg from '../../../assets/robot.png'
+import robotImg from '../../../assets/login.png'
 import aiImg from '../../../assets/Artificial intelligence.png'
 
 const LoginPage: React.FC = () => {
