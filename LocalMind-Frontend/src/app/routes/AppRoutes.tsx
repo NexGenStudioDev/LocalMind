@@ -1,7 +1,10 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from '../../features/Dashboard/V1/Component/Pages/HomePage'
+import SignUp from '../../features/Auth/SignUp'
 import LoginPage from '../../shared/component/v1/LoginPage'
+import ForgotPassword from '../../features/Auth/ForgotPassword'
+import ResetPassword from '../../features/Auth/ResetPassword'
 
 const AppRoutes: React.FC = () => {
   return (
@@ -9,16 +12,14 @@ const AppRoutes: React.FC = () => {
       {/* Homepage */}
       <Route path="/" element={<HomePage />} />
 
-      {/* Sign Up / Login Page */}
+      {/* Auth Pages */}
+      <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-      {/* Register Page - TODO: Create dedicated RegisterPage component */}
-      <Route path="/register" element={<LoginPage />} />
-
-      {/* Forgot Password Page - TODO: Create ForgotPasswordPage component */}
-      <Route path="/forgot-password" element={<LoginPage />} />
-
-      {/* Chat Page */}
+      {/* Legacy Redirects or Placeholders from Upstream */}
+      <Route path="/register" element={<SignUp />} />
     </Routes>
   )
 }

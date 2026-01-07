@@ -22,6 +22,11 @@ const createKeyPair = async () => {
   return { raw, hashed }
 }
 
+import { sendEmail } from '../../../utils/email'
+import UserConstant from './user.constant'
+
+// ... existing code ...
+
 class userService {
   async createUser(data: IUser) {
     const hashPassword = await UserUtils.passwordHash(String(data.password))
@@ -49,6 +54,62 @@ class userService {
     } catch (err: any) {
       throw new Error(err.message)
     }
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await User.findOne({ email })
+    if (!user) {
+      // For security, do not reveal that the user does not exist
+      return
+    }
+
+    // Generate token
+    const resetToken = crypto.randomBytes(32).toString('hex')
+    const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+    const resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
+
+    user.resetPasswordToken = resetPasswordToken
+    user.resetPasswordExpire = resetPasswordExpire
+    await user.save()
+
+    // Construct reset URL (frontend URL)
+    // NOTE: In production, FRONTEND_URL should be in env
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Password Reset Request',
+        message: resetUrl,
+      })
+    } catch {
+      user.resetPasswordToken = null
+      user.resetPasswordExpire = null
+      await user.save()
+      throw new Error(UserConstant.FAILED_TO_SEND_EMAIL)
+    }
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    // Hash the token to compare with DB
+    const resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex')
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    })
+
+    if (!user) {
+      throw new Error(UserConstant.INVALID_TOKEN) // Or generic "Invalid token"
+    }
+
+    // Set new password
+    user.password = await UserUtils.passwordHash(newPassword)
+    user.resetPasswordToken = null
+    user.resetPasswordExpire = null
+
+    await user.save()
   }
 }
 export default new userService()

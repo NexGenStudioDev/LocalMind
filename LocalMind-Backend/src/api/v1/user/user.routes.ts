@@ -7,6 +7,8 @@ import userMiddleware from './user.middleware'
 router.post('/v1/auth/signup', userController.register)
 router.post('/v1/user/login', userController.login)
 
+router.post('/v1/auth/forgot-password', userController.forgotPassword)
+router.post('/v1/auth/reset-password/:token', userController.resetPassword)
 
 router.get('/v1/auth/apiKey/generate', userMiddleware.middleware, userController.apiEndPointCreater)
 router.get('/v1/auth/profile', userMiddleware.middleware, userController.profile)
