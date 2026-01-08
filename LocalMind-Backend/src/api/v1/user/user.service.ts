@@ -50,5 +50,29 @@ class userService {
       throw new Error(err.message)
     }
   }
+
+  async getAdminStats() {
+    try {
+      const totalUsers = await User.countDocuments()
+      const adminUsers = await User.countDocuments({ role: 'admin' })
+      const regularUsers = await User.countDocuments({ role: 'user' })
+      const creatorUsers = await User.countDocuments({ role: 'creator' })
+
+      const recentUsers = await User.find()
+        .select('firstName email role createdAt')
+        .sort({ createdAt: -1 })
+        .limit(10)
+
+      return {
+        totalUsers,
+        adminUsers,
+        regularUsers,
+        creatorUsers,
+        recentUsers,
+      }
+    } catch (err: any) {
+      throw new Error(err.message)
+    }
+  }
 }
 export default new userService()

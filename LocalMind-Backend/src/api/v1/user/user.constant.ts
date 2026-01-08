@@ -87,6 +87,11 @@ enum UserConstant {
 
   API_KEY_REVEALED = 'API key revealed successfully',
   API_KEY_REVEAL_FAILED = 'Failed to reveal API key',
+
+  // ✅ ADMIN OPERATIONS
+  ADMIN_STATS_SUCCESS = 'Admin statistics fetched successfully',
+  ADMIN_STATS_FAILED = 'Failed to fetch admin statistics',
+  ADMIN_ONLY = 'Access denied. Admin privileges required',
 }
 
 export default UserConstant

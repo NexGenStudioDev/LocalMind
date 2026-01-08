@@ -12,6 +12,9 @@ router.get('/v1/auth/apiKey/generate', userMiddleware.middleware, userController
 router.get('/v1/auth/profile', userMiddleware.middleware, userController.profile)
 router.get('/v1/auth/apiKey', userMiddleware.middleware, userController.getApiKey)
 
+// Admin routes
+router.get('/v1/admin/stats', userMiddleware.adminMiddleware, userController.getAdminStats)
+
 // router.post("v1/user/apikey/reveal",   userMiddleware.middleware, UserController.revealApiKey);
 
 export { router as userRoutes }
