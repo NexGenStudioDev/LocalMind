@@ -1,24 +1,27 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
+
 import HomePage from '../../features/Dashboard/V1/Component/Pages/HomePage'
-import LoginPage from '../../shared/component/v1/LoginPage'
+import LoginPage from '../../shared/component/V1/LoginPage'
+import ContributorsPage from '../../features/Dashboard/contributors/ContributorsPage'
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Homepage */}
+      {/* Home Page */}
       <Route path="/" element={<HomePage />} />
 
-      {/* Sign Up / Login Page */}
+      {/* Contributors Page */}
+      <Route path="/contributors" element={<ContributorsPage />} />
+
+      {/* Login Page */}
       <Route path="/login" element={<LoginPage />} />
 
-      {/* Register Page - TODO: Create dedicated RegisterPage component */}
+      {/* Register Page (temporary using LoginPage) */}
       <Route path="/register" element={<LoginPage />} />
 
-      {/* Forgot Password Page - TODO: Create ForgotPasswordPage component */}
+      {/* Forgot Password Page (temporary using LoginPage) */}
       <Route path="/forgot-password" element={<LoginPage />} />
-
-      {/* Chat Page */}
     </Routes>
   )
 }

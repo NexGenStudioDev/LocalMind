@@ -1,93 +1,196 @@
+import React, { useState } from "react";
+
+type Contributor = {
+  name: string;
+  github: string;
+  linkedin: string;
+  role: string;
+};
+
 const ContributorsPage = () => {
+  const [contributors, setContributors] = useState<Contributor[]>([]);
+  const [form, setForm] = useState<Contributor>({
+    name: "",
+    github: "",
+    linkedin: "",
+    role: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const addContributor = () => {
+    if (!form.name || !form.github) {
+      alert("Name and GitHub are required");
+      return;
+    }
+    setContributors([...contributors, form]);
+    setForm({ name: "", github: "", linkedin: "", role: "" });
+  };
+
   return (
-    <div style={{ padding: "2.5rem", maxWidth: "900px", margin: "0 auto" }}>
-      {/* Page Title */}
-      <h1>Contributors </h1>
-
-      {/* Introduction */}
-      <p style={{ marginTop: "1rem", fontSize: "1.1rem" }}>
-        This project is built by people like you.  
-        Every contribution — big or small — helps this community grow.
-      </p>
-
-      <p style={{ marginTop: "0.5rem" }}>
-        Whether you are a beginner or an experienced developer, you are welcome
-        here. Collaboration makes us stronger 
-      </p>
-
-      <hr style={{ margin: "2rem 0" }} />
-
-      {/* Contributors List */}
-      <h2>Our Contributors</h2>
-
-      <div style={{ marginTop: "1rem" }}>
-        <div
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            padding: "1rem",
-            marginBottom: "1rem",
-          }}
-        >
-          <h3>Your Name</h3>
-          <p>Email: your.email@example.com</p>
-          <p>
-            GitHub:{" "}
-            <a href="https://github.com/your-username" target="_blank">
-              https://github.com/your-username
-            </a>
-          </p>
-          <p>
-            LinkedIn:{" "}
-            <a href="https://linkedin.com/in/your-profile" target="_blank">
-              https://linkedin.com/in/your-profile
-            </a>
-          </p>
-          <p>
-            Bio: Passionate developer who loves learning and contributing to
-            open-source.
-          </p>
-          <p>Area of Contribution: Frontend / Documentation / Bug Fixes</p>
-        </div>
+    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "2rem" }}>
+      {/* HERO */}
+      <div
+        style={{
+          background: "linear-gradient(135deg,#2563eb,#4f46e5)",
+          padding: "2.5rem",
+          borderRadius: "18px",
+          color: "white",
+          marginBottom: "2rem",
+        }}
+      >
+        <h1 style={{ fontSize: "2.5rem" }}>Contributors 💙</h1>
+        <p>
+          Built by people like you. Every contribution — big or small — matters.
+        </p>
       </div>
 
-      <hr style={{ margin: "2rem 0" }} />
+      {/* ADD CONTRIBUTOR FORM */}
+      <div
+        style={{
+          background: "#fff",
+          padding: "1.5rem",
+          borderRadius: "14px",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+          marginBottom: "2.5rem",
+        }}
+      >
+        <h2>Add Yourself</h2>
 
-      {/* How to Become a Contributor */}
-      <h2>How to Become a Contributor </h2>
+        <input
+          name="name"
+          placeholder="Your Name"
+          value={form.name}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-      <ol style={{ marginTop: "1rem", lineHeight: "1.8" }}>
-        <li>Fork the repository</li>
-        <li>Pick an issue or improve existing features</li>
-        <li>Create a new branch</li>
-        <li>Make your changes</li>
-        <li>Submit a Pull Request</li>
-      </ol>
+        <input
+          name="github"
+          placeholder="GitHub Profile URL"
+          value={form.github}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-      <p style={{ marginTop: "1rem" }}>
-        No contribution is too small — even fixing a typo helps 
-      </p>
+        <input
+          name="linkedin"
+          placeholder="LinkedIn Profile URL"
+          value={form.linkedin}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-      <hr style={{ margin: "2rem 0" }} />
+        <input
+          name="role"
+          placeholder="Area of Contribution (Frontend, Docs, etc.)"
+          value={form.role}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-      {/* Call to Action */}
-      <h2>New Here? You’re Welcome </h2>
+        <button onClick={addContributor} style={buttonStyle}>
+          ➕ Add Contributor
+        </button>
+      </div>
 
-      <p style={{ marginTop: "0.5rem" }}>
-        Beginners are encouraged to contribute.  
-        This project is a safe space to learn, grow, and collaborate.
-      </p>
+      {/* CONTRIBUTORS LIST */}
+      <h2>Our Contributors</h2>
 
-      <p>
-        If you’re unsure where to start, check the issues labeled{" "}
-        <strong>“good first issue”</strong>.
-      </p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "1.5rem",
+          marginTop: "1rem",
+        }}
+      >
+        {contributors.map((c, index) => (
+          <div key={index} style={cardStyle}>
+            <h3>{c.name}</h3>
 
-      <p style={{ marginTop: "1rem", fontWeight: "bold" }}>
-        Let’s build something amazing together 
-      </p>
+            <div style={{ marginTop: "0.5rem" }}>
+              <a href={c.github} target="_blank" rel="noreferrer" style={link}>
+                GitHub
+              </a>
+              {c.linkedin && (
+                <a
+                  href={c.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={link}
+                >
+                  LinkedIn
+                </a>
+              )}
+            </div>
+
+            {c.role && <span style={tag}>{c.role}</span>}
+          </div>
+        ))}
+      </div>
+
+      {/* HOW TO CONTRIBUTE */}
+      <div style={{ marginTop: "3rem" }}>
+        <h2>How to Become a Contributor</h2>
+        <ol style={{ lineHeight: "1.8" }}>
+          <li>Fork the repository</li>
+          <li>Pick an issue or improve a feature</li>
+          <li>Create a new branch</li>
+          <li>Make your changes</li>
+          <li>Submit a Pull Request 🎉</li>
+        </ol>
+      </div>
     </div>
   );
+};
+
+/* ---------- STYLES ---------- */
+
+const inputStyle: React.CSSProperties = {
+  display: "block",
+  width: "100%",
+  padding: "0.6rem",
+  marginTop: "0.75rem",
+  borderRadius: "8px",
+  border: "1px solid #d1d5db",
+};
+
+const buttonStyle: React.CSSProperties = {
+  marginTop: "1.2rem",
+  background: "#2563eb",
+  color: "#fff",
+  padding: "0.6rem 1.4rem",
+  border: "none",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: 600,
+};
+
+const cardStyle: React.CSSProperties = {
+  background: "#fff",
+  padding: "1.5rem",
+  borderRadius: "14px",
+  boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+};
+
+const link: React.CSSProperties = {
+  marginRight: "12px",
+  color: "#2563eb",
+  textDecoration: "none",
+  fontWeight: 500,
+};
+
+const tag: React.CSSProperties = {
+  display: "inline-block",
+  marginTop: "0.8rem",
+  background: "#eef2ff",
+  color: "#4338ca",
+  padding: "0.25rem 0.7rem",
+  borderRadius: "999px",
+  fontSize: "0.75rem",
 };
 
 export default ContributorsPage;
