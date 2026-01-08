@@ -190,7 +190,7 @@ const LoginPage: React.FC = () => {
         </div>
 
         {/* Right Section */}
-        <div className="bg-gradient-to-br from-gray-700 to-gray-900 p-0 flex items-center justify-center hidden md:flex overflow-hidden">
+        <div className="bg-gradient-to-br from-gray-700 to-gray-900 p-0 items-center justify-center hidden md:flex overflow-hidden">
           <img src={robotImg} alt="Robot" className="w-full h-full object-cover" />
         </div>
       </div>
