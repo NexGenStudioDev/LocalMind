@@ -304,7 +304,7 @@ Ensure you have the following installed:
 | **Node.js**           | 18.x or higher | [nodejs.org](https://nodejs.org/)   |
 | **npm**               | 9.x or higher  | Included with Node.js               |
 | **Git**               | Latest         | [git-scm.com](https://git-scm.com/) |
-| **Ollama** (optional) | Latest         | [ollama.ai](https://ollama.ai/)     |
+| **Ollama** (optional) | Latest         | [ollama.ai](https://ollama.ai/) - [Setup Guide](docs/OLLAMA_SETUP.md) |
 
 #### Verify Installation
 

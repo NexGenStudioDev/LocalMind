@@ -1,5 +1,6 @@
 import { OllamaEmbeddings, Ollama } from '@langchain/ollama'
 import AiTemplate from '../../../../Template/v1/Ai.template'
+import { env } from '../../../../constant/env.constant'
 
 class OllamaService {
   public async getVector(data: any): Promise<number[] | undefined> {
@@ -7,7 +8,7 @@ class OllamaService {
       const embeddings = new OllamaEmbeddings({
         model: 'koill/sentence-transformers:paraphrase-multilingual-minilm-l12-v2',
         maxRetries: 2,
-        baseUrl: 'http://localhost:11434',
+        baseUrl: env.OLLAMA_HOST,
       })
 
       const vector = await embeddings.embedDocuments(data)
@@ -24,7 +25,7 @@ class OllamaService {
       const promptTemplate = await AiTemplate.getPromptTemplate()
 
       const ollama = new Ollama({
-        baseUrl: 'http://localhost:11434',
+        baseUrl: env.OLLAMA_HOST,
         model: model,
         maxRetries: 2,
         cache: false,
