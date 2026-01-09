@@ -1,5 +1,55 @@
-<div align="center">
-  <img src="assets/Banner_LocalMind.png" alt="LocalMind Banner" width="900"/>
+  <div align="center">
+
+# 🧠 LocalMind
+
+### **Your Data. Your AI. No Compromises.**
+
+**LocalMind** is a production-grade, open-source AI platform designed to bridge the gap between private local LLMs and powerful cloud intelligence.
+
+[![GitHub Stars](https://img.shields.io/github/stars/NexGenStudioDev/LocalMind?style=for-the-badge&logo=github&color=FFD700)](https://github.com/NexGenStudioDev/LocalMind/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+
+---
+
+[✨ Features](#-features) • [🚀 Quick Start](#-quick-start) • [🏗️ Architecture](#-architecture) • [🧩 API Docs](#-api-documentation) • [🤝 Contributing](#-contributing)
+
+<img src="assets/Banner_LocalMind.png" alt="LocalMind Banner" width="100%" style="border-radius: 10px; border: 1px solid #333;"/>
+
+</div>
+
+## 🌐 The AI Evolution
+LocalMind empowers you to move away from restrictive, subscription-based AI models. Run LLaMA, Mistral, or Gemini through a single, unified interface while keeping your data 100% private.
+
+---
+
+## 🏗️ Architecture
+
+The service follows **SOLID principles** and implements a **Clean Architecture**:
+
+```text
+EmailService (Main Orchestrator)
+┃
+┣━━ 📦 Providers (Strategy Pattern)
+┃   ┣━━ 🔹 ResendProvider (Primary)
+┃   ┣━━ 🔸 SendGridProvider (Fallback)
+┃   ┣━━ 📧 NodemailerProvider (SMTP)
+┃   ┗━━ 🧪 MockProviders (Testing)
+┃
+┣━━ 🛠️ Resilience Layers
+┃   ┣━━ 🔄 RetryManager ....... [Exponential Backoff]
+┃   ┣━━ 🚦 RateLimiter ........ [Token Bucket]
+┃   ┗━━ ⚡ CircuitBreaker ...... [Failure Detection]
+┃
+┣━━ 🛡️ Security & Integrity
+┃   ┣━━ 🔒 IdempotencyManager . [Duplicate Prevention]
+┃   ┗━━ 📋 Queue System ....... [Failed Email Recovery]
+┃
+┗━━ 📊 Observability
+    ┗━━ 📝 Logger ............. [Structured JSON Logging]
+```
+
   <br/><br/>
   <h1><b>LocalMind — AI Without Limits</b></h1>
   <p>
@@ -173,6 +223,7 @@ Share your LocalMind instance with anyone, anywhere:
 | --------------- | ----- | ------------- | -------- |
 | **LocalTunnel** | Fast  | ✅            | Basic    |
 | **Ngrok**       | Fast  | ✅ Pro        | Advanced |
+| **Cloudflared** | Fast  | ❌ Random     | Advanced |
 
 #### Benefits
 
@@ -224,14 +275,14 @@ git clone https://github.com/NexGenStudioDev/LocalMind.git
 cd LocalMind
 
 # Install dependencies
-cd server && npm install
-cd ../client && npm install
+cd LocalMind-Backend && npm install
+cd ../LocalMind-Frontend && npm install
 
 # Start the backend
-cd server && npm run dev
+cd LocalMind-Backend && npm run dev
 
 # Start the frontend (in a new terminal)
-cd client && npm run dev
+cd LocalMind-Frontend && npm run dev
 
 # Open http://localhost:5173
 ```
@@ -269,7 +320,7 @@ git --version   # Should show git version 2.x.x
 
 ```bash
 # Navigate to server directory
-cd server
+cd LocalMind-Backend
 
 # Install dependencies
 npm install
@@ -306,7 +357,7 @@ npm run test         # Run test suite
 
 ```bash
 # Navigate to client directory
-cd client
+cd LocalMind-Frontend
 
 # Install dependencies
 npm install
@@ -1095,6 +1146,85 @@ Content-Type: application/json
 }
 ```
 
+#### Expose via Cloudflared
+
+```http
+POST /api/v1/expose/cloudflared
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "port": 3000
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Cloudflared tunnel started successfully",
+  "data": {
+    "url": "https://random-subdomain.trycloudflare.com",
+    "port": 3000,
+    "status": "active"
+  }
+}
+```
+
+#### Get Cloudflared Status
+
+```http
+GET /api/v1/expose/cloudflared/status
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+**Response (when active):**
+
+```json
+{
+  "success": true,
+  "message": "Tunnel status retrieved successfully",
+  "data": {
+    "active": true,
+    "url": "https://random-subdomain.trycloudflare.com",
+    "port": 3000,
+    "startedAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+**Response (when inactive):**
+
+```json
+{
+  "success": true,
+  "message": "Tunnel status retrieved successfully",
+  "data": {
+    "active": false
+  }
+}
+```
+
+#### Stop Cloudflared Tunnel
+
+```http
+DELETE /api/v1/expose/cloudflared/stop
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Cloudflared tunnel stopped successfully",
+  "data": {
+    "previousUrl": "https://random-subdomain.trycloudflare.com"
+  }
+}
+```
+
 #### Get Exposure Status
 
 ```http
@@ -1219,7 +1349,7 @@ eventSource.onerror = () => {
 }
 ```
 
-### Example 4: Expose Your AI Globally
+### Example 4: Expose Your AI Globally with LocalTunnel
 
 ```javascript
 // Start LocalTunnel
@@ -1231,6 +1361,7 @@ const exposeResponse = await fetch(`${API_URL}/expose/localtunnel`, {
   },
   body: JSON.stringify({
     subdomain: 'my-ai-demo',
+    port: 3000,
   }),
 })
 
@@ -1238,6 +1369,59 @@ const {
   data: { url },
 } = await exposeResponse.json()
 console.log(`Your AI is now accessible at: ${url}`)
+
+// Check status
+const statusResponse = await fetch(`${API_URL}/expose/localtunnel/status`, {
+  headers: { Authorization: `Bearer ${token}` },
+})
+const { data: status } = await statusResponse.json()
+
+// Stop when done
+await fetch(`${API_URL}/expose/localtunnel/stop`, {
+  method: 'DELETE',
+  headers: { Authorization: `Bearer ${token}` },
+})
+```
+
+### Example 5: Expose with Cloudflared
+
+```javascript
+// Start Cloudflared tunnel
+const tunnelResponse = await fetch(`${API_URL}/expose/cloudflared`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify({
+    port: 3000,
+  }),
+})
+
+const {
+  data: { url: tunnelUrl },
+} = await tunnelResponse.json()
+console.log(`Cloudflared tunnel active at: ${tunnelUrl}`)
+
+// Check status later
+const statusResponse = await fetch(`${API_URL}/expose/cloudflared/status`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+
+const { data: status } = await statusResponse.json()
+if (status.active) {
+  console.log(`Tunnel is running: ${status.url}`)
+}
+
+// Stop when done
+await fetch(`${API_URL}/expose/cloudflared/stop`, {
+  method: 'DELETE',
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
 ```
 
 ---

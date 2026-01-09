@@ -10,8 +10,8 @@ const passwordSchema = z
   .regex(/[0-9]/, UserConstant.PASSWORD_NUMBER_REQUIRED)
   .regex(/[@$!%*?&]/, UserConstant.PASSWORD_SPECIAL_CHAR_REQUIRED)
 
-const roleSchema = z.enum(AllowedUserRoles, {
-  errorMap: () => ({ message: UserConstant.INVALID_ROLE }),
+const roleSchema = z.enum(['user', 'admin', 'creator'], {
+  message: UserConstant.INVALID_ROLE,
 })
 
 const portfolioUrlSchema = z

@@ -36,7 +36,14 @@ class UserController {
         throw new Error(UserConstant.EMAIL_ALREADY_EXISTS)
       }
 
-      const user = await userService.createUser(validatedData)
+      // Convert undefined to null for optional fields to match IUser type
+      const userData: IUser = {
+        ...validatedData,
+        portfolioUrl: validatedData.portfolioUrl ?? null,
+        bio: validatedData.bio ?? null,
+      }
+
+      const user = await userService.createUser(userData)
 
 
       const userObj = UserUtils.sanitizeUser(user)
@@ -78,7 +85,7 @@ class UserController {
 
       const token = UserUtils.generateToken({
         userId: user.userObj._id || '',
-        email: user.userObj.email,
+        email: user.userObj.email || validatedData.email,
         role: user.userObj.role,
       })
 

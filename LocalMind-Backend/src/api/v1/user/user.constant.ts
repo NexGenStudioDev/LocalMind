@@ -63,7 +63,6 @@ enum UserConstant {
   FIRST_NAME_REQUIRED = 'First name is required',
   BIRTH_PLACE_REQUIRED = 'Birth place is required',
   LOCATION_REQUIRED = 'Location is required',
-  INVALID_ROLE = 'Invalid user role',
   INVALID_PORTFOLIO_URL = 'Portfolio URL is invalid',
   BIO_TOO_LONG = 'Bio exceeds the maximum allowed length',
 

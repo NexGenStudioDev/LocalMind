@@ -30,7 +30,7 @@ class UserUtils {
         return {
           email: decoded.email as string,
           _id: decoded.userId as string,
-          role: decoded.role as string,
+          ...(decoded.role && { role: decoded.role as string }),
         }
       }
 
@@ -40,7 +40,7 @@ class UserUtils {
     }
   }
 
-  public static async findByEmailandCheckPassword(data: IUser) {
+  public static async findByEmailandCheckPassword(data: Partial<IUser>) {
     try {
       const user = await User.findOne({ email: data.email }).select('+password')
 
