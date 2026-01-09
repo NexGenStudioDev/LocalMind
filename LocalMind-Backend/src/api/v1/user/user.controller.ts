@@ -15,6 +15,7 @@ class UserController {
     this.profile = this.profile.bind(this)
     this.apiEndPointCreater = this.apiEndPointCreater.bind(this)
     this.getApiKey = this.getApiKey.bind(this)
+    this.getAdminStats = this.getAdminStats.bind(this)
   }
 
   private setHeaderToken(res: Response, token: string): void {
@@ -163,6 +164,16 @@ class UserController {
       SendResponse.success(res, UserConstant.API_KEY_FETCHED, { apiKey: maskedKey }, 200)
     } catch (err: any) {
       SendResponse.error(res, err.message || UserConstant.SERVER_ERROR, 500, err)
+    }
+  }
+
+  async getAdminStats(req: Request, res: Response): Promise<void> {
+    try {
+      const stats = await userService.getAdminStats()
+
+      SendResponse.success(res, UserConstant.ADMIN_STATS_SUCCESS, stats, StatusConstant.OK)
+    } catch (err: any) {
+      SendResponse.error(res, err.message || UserConstant.ADMIN_STATS_FAILED, StatusConstant.INTERNAL_SERVER_ERROR, err)
     }
   }
 }
