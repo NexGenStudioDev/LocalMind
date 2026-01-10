@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from '../../features/Dashboard/V1/Component/Pages/HomePage'
 import LoginPage from '../../shared/component/v1/LoginPage'
+import ContributorsPage from "../pages/Contributors"; 
 
 const AppRoutes: React.FC = () => {
   return (
@@ -19,6 +20,9 @@ const AppRoutes: React.FC = () => {
       <Route path="/forgot-password" element={<LoginPage />} />
 
       {/* Chat Page */}
+
+      {/* Contributors page*/}
+      <Route path="/contributors" element={<ContributorsPage />} />
     </Routes>
   )
 }
