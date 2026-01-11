@@ -15,6 +15,8 @@ export interface IUser {
   apikey?: string | null
   model?: string | null
   modelApiKey?: string | null
+  resetPasswordToken?: string | null
+  resetPasswordExpire?: Date | null
   createdAt?: Date
   updatedAt?: Date
 }

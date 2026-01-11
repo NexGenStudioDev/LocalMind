@@ -40,3 +40,14 @@ export const userLoginSchema = z
     password: z.string(),
   })
   .strict()
+export const forgotPasswordSchema = z
+  .object({
+    email: z.string().email(UserConstant.INVALID_CREDENTIALS).toLowerCase(),
+  })
+  .strict()
+
+export const resetPasswordSchema = z
+  .object({
+    password: passwordSchema,
+  })
+  .strict()

@@ -31,6 +31,14 @@ enum UserConstant {
   PASSWORD_RESET_FAILED = 'Failed to reset password',
   EMAIL_VERIFIED_FAILED = 'Failed to verify email',
 
+  // ✅ FORGOT & RESET PASSWORD
+  FORGOT_PASSWORD_SUCCESS = 'If the email exists, a reset link has been sent.',
+  RESET_PASSWORD_SUCCESS = 'Password reset successful',
+  FORGOT_PASSWORD_FAILED = 'Failed to process forgot password request',
+  INVALID_OR_EXPIRED_TOKEN = 'Invalid or expired reset token',
+  TOKEN_EXPIRED = 'Reset token has expired',
+  RESET_PASSWORD_TOKEN_MISSING = 'Reset password token is missing',
+
   // ✅ PASSWORD VALIDATION & ERRORS
 
   PASSWORD_REQUIRED = 'Password is required',
@@ -100,4 +108,9 @@ export const PasswordConfig = {
 
 export const BioConfig = {
   maxLength: 500,
+}
+
+export const ResetPasswordConfig = {
+  tokenLength: 32, // 32 bytes = 64 hex characters
+  expiryMinutes: 15, // Token valid for 15 minutes
 }

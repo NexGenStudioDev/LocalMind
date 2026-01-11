@@ -1,3 +1,6 @@
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import robotImg from '../../../assets/login.png'
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import robotImg from '../../../assets/robot.png'
@@ -18,6 +21,7 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -26,6 +30,50 @@ const LoginPage: React.FC = () => {
     e.preventDefault()
     setError('')
     setSuccess('')
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/v1/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.message || 'Login failed. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      // Store token in localStorage
+      if (data.data?.token) {
+        localStorage.setItem('token', data.data.token)
+        localStorage.setItem('user', JSON.stringify(data.data.user || {}))
+
+        // Store remember me preference
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true')
+          localStorage.setItem('savedEmail', email)
+        }
+
+        setSuccess('Login successful! Redirecting...')
+
+        // Redirect after brief delay
+        setTimeout(() => {
+          navigate('/dashboard')
+        }, 1000)
+      }
+    } catch (err) {
+      setError('An error occurred. Please check your connection and try again.')
+      console.error('Login error:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
     setIsLoading(true)
 
     try {
@@ -92,6 +140,8 @@ const LoginPage: React.FC = () => {
           >
             {/* Error Message */}
             {error && (
+              <div className="p-3 sm:p-4 bg-red-900 bg-opacity-30 border border-red-500 rounded-lg">
+                <p className="text-red-400 text-xs sm:text-sm">{error}</p>
               <div className="p-3 bg-red-900 border border-red-700 rounded-lg text-red-100 text-xs sm:text-sm">
                 {error}
               </div>
@@ -99,6 +149,8 @@ const LoginPage: React.FC = () => {
 
             {/* Success Message */}
             {success && (
+              <div className="p-3 sm:p-4 bg-green-900 bg-opacity-30 border border-green-500 rounded-lg">
+                <p className="text-green-400 text-xs sm:text-sm">{success}</p>
               <div className="p-3 bg-green-900 border border-green-700 rounded-lg text-green-100 text-xs sm:text-sm">
                 {success}
               </div>
@@ -118,8 +170,9 @@ const LoginPage: React.FC = () => {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
+                className="w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition disabled:opacity-50"
                 required
+                disabled={loading}
                 disabled={isLoading}
               />
             </div>
@@ -138,8 +191,9 @@ const LoginPage: React.FC = () => {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
+                className="w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition disabled:opacity-50"
                 required
+                disabled={loading}
                 disabled={isLoading}
               />
 
@@ -150,6 +204,8 @@ const LoginPage: React.FC = () => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={e => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 bg-gray-700 border border-gray-600 rounded cursor-pointer accent-gray-500 disabled:opacity-50"
+                    disabled={loading}
                     className="w-4 h-4 bg-gray-700 border border-gray-600 rounded cursor-pointer accent-gray-500"
                     disabled={isLoading}
                   />
@@ -167,6 +223,17 @@ const LoginPage: React.FC = () => {
             {/* Submit Button */}
             <button
               type="submit"
+              disabled={loading}
+              className="w-full bg-gray-400 hover:bg-gray-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-bold py-2.5 text-sm sm:text-base rounded-lg transition-colors duration-200 mt-6 sm:mt-7 md:mt-8 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <span className="inline-block w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                  Logging in...
+                </>
+              ) : (
+                'Log In'
+              )}
               disabled={isLoading}
               className={`w-full font-bold py-2.5 text-sm sm:text-base rounded-lg transition-colors duration-200 mt-6 sm:mt-7 md:mt-8 ${
                 isLoading
