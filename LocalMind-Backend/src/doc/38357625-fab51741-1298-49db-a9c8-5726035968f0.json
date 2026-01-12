@@ -2,19 +2,387 @@
   "info": {
     "_postman_id": "38357625-fab51741-1298-49db-a9c8-5726035968f0",
     "name": "LocalMind Api",
-    "description": "LocalMind is a free, open-source platform made for students, developers, and anyone who wants to use AI without paying expensive fees or worrying about usage limits. notionvc: d4b09e72-493d-4a46-90ca-f316ed8444af\n\nWith LocalMind, you can run powerful AI models directly on your computer (like Mistral or LLaMA) or connect to cloud models (like Gemini) using your own API key — which is stored safely on your device. You can even upload Excel files to teach your AI more things, and expose your local port so others can access your AI too! notionvc: bb99df7a-7100-4b2a-a93b-0614713c0f93",
+    "description": "LocalMind is a free, open-source platform made for students, developers, and anyone who wants to use AI without paying expensive fees or worrying about usage limits.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Ai model",
+      "name": "Auth",
+      "item": [
+        {
+          "name": "1. Sign Up - Valid Registration",
+          "id": "signup-valid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Test@1234\",\n  \"birthPlace\": \"New York\",\n  \"location\": \"California\",\n  \"portfolioUrl\": \"https://portfolio.example.com\",\n  \"bio\": \"A passionate developer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "✅ Valid registration with all required fields.\n\n**Expected:** 201 Created with user object and JWT token."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Sign Up - Duplicate Email (Should Fail)",
+          "id": "signup-duplicate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Test@1234\",\n  \"birthPlace\": \"Boston\",\n  \"location\": \"Texas\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Should fail - email already exists.\n\n**Expected:** 409 Conflict with 'already exists' message."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Sign Up - No Uppercase Password (Should Fail)",
+          "id": "signup-no-uppercase",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"email\": \"nouppercasetest@example.com\",\n  \"password\": \"test@1234\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Password missing uppercase letter.\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Sign Up - No Lowercase Password (Should Fail)",
+          "id": "signup-no-lowercase",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"email\": \"nolowercasetest@example.com\",\n  \"password\": \"TEST@1234\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Password missing lowercase letter.\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Sign Up - No Number Password (Should Fail)",
+          "id": "signup-no-number",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"email\": \"nonumbertest@example.com\",\n  \"password\": \"Test@test\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Password missing number.\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Sign Up - No Special Char Password (Should Fail)",
+          "id": "signup-no-special",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"email\": \"nospecialtest@example.com\",\n  \"password\": \"Test12345\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Password missing special character (@$!%*?&).\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Sign Up - Short Password (Should Fail)",
+          "id": "signup-short-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"email\": \"shortpasstest@example.com\",\n  \"password\": \"Te@1\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Password too short (less than 8 characters).\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Sign Up - Empty firstName (Should Fail)",
+          "id": "signup-empty-firstname",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"\",\n  \"email\": \"nofirstname@example.com\",\n  \"password\": \"Test@1234\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Missing required field: firstName.\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "9. Sign Up - Invalid Email (Should Fail)",
+          "id": "signup-invalid-email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"email\": \"invalid-email-format\",\n  \"password\": \"Test@1234\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Invalid email format.\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "10. Sign Up - Long Bio (Should Fail)",
+          "id": "signup-long-bio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"email\": \"longbiotest@example.com\",\n  \"password\": \"Test@1234\",\n  \"birthPlace\": \"City\",\n  \"location\": \"Country\",\n  \"bio\": \"This bio is way too long and exceeds the maximum allowed fifty characters limit\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "description": "❌ Bio exceeds 50 character limit.\n\n**Expected:** 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "11. Login - Valid Credentials",
+          "id": "login-valid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/user/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "user", "login"]
+            },
+            "description": "✅ Login with valid credentials.\n\n**Expected:** 200 OK with user data and JWT token."
+          },
+          "response": []
+        },
+        {
+          "name": "12. Login - Wrong Password (Should Fail)",
+          "id": "login-wrong-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"WrongPassword@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/user/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "user", "login"]
+            },
+            "description": "❌ Login with wrong password.\n\n**Expected:** 401 Unauthorized."
+          },
+          "response": []
+        },
+        {
+          "name": "13. Login - Non-existent Email (Should Fail)",
+          "id": "login-nonexistent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nonexistent@example.com\",\n  \"password\": \"SomePassword@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/user/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "user", "login"]
+            },
+            "description": "❌ Login with email that doesn't exist.\n\n**Expected:** 401 Unauthorized or 404 Not Found."
+          },
+          "response": []
+        },
+        {
+          "name": "14. Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "forgot-password"]
+            },
+            "description": "✅ Request password reset link.\n\n**Expected:** 200 OK."
+          },
+          "response": []
+        },
+        {
+          "name": "15. Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewSecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/reset-password/:token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "reset-password", ":token"],
+              "variable": [
+                {
+                  "key": "token",
+                  "value": "ENTER_TOKEN_HERE"
+                }
+              ]
+            },
+            "description": "✅ Reset password using token.\n\n**Expected:** 200 OK."
+          },
+          "response": []
+        }
+      ],
+      "id": "auth-folder",
+      "description": "Authentication endpoints for SignUp and Login testing."
+    },
+    {
+      "name": "AI Models",
       "item": [
         {
           "name": "Chat With Ollama",
           "id": "38357625-19b4297e-da77-4695-9036-020dcb029cf1",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "POST",
             "header": [],
@@ -23,15 +391,13 @@
               "urlencoded": [
                 {
                   "key": "prompt",
-                  "value": "Whart is C++",
-                  "type": "text",
-                  "uuid": "a2f22c50-e8c1-4bf5-8ff6-01aa10df657e"
+                  "value": "What is C++",
+                  "type": "text"
                 },
                 {
                   "key": "model",
                   "value": "gemma:2b",
-                  "type": "text",
-                  "uuid": "6e722a85-306e-4186-9cdf-c61286544ecc"
+                  "type": "text"
                 }
               ]
             },
@@ -39,17 +405,13 @@
               "raw": "{{baseUrl}}/v1/chat-with-ollama",
               "host": ["{{baseUrl}}"],
               "path": ["v1", "chat-with-ollama"]
-            },
-            "description": "This API lets you chat with AI models like `llama3` or `mistral` using [Ollama](https://ollama.com).  \nJust send a prompt and get a smart response from the model.\n\n> 🔧 **Before using this API, make sure the model is installed on your system using Ollama.** \n  \n\n### Example:\n\n``` bash\nollama run llama3\n\n ```"
+            }
           },
           "response": []
         },
         {
-          "name": "Chat WIth Gemini",
+          "name": "Chat With Gemini",
           "id": "38357625-a7ed2e36-414f-4645-9b65-5a508ab542d6",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "POST",
             "header": [],
@@ -58,15 +420,13 @@
               "urlencoded": [
                 {
                   "key": "prompt",
-                  "value": "Whart is Java",
-                  "type": "text",
-                  "uuid": "a2f22c50-e8c1-4bf5-8ff6-01aa10df657e"
+                  "value": "What is Java",
+                  "type": "text"
                 },
                 {
                   "key": "model",
                   "value": "gemma:2b",
-                  "type": "text",
-                  "uuid": "6e722a85-306e-4186-9cdf-c61286544ecc"
+                  "type": "text"
                 }
               ]
             },
@@ -81,9 +441,6 @@
         {
           "name": "Chat With Groq",
           "id": "38357625-c6cbf081-3c66-4671-9868-771297b638f8",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "POST",
             "header": [],
@@ -92,9 +449,8 @@
               "urlencoded": [
                 {
                   "key": "message",
-                  "value": "What is the Capital of Ranchi",
-                  "type": "text",
-                  "uuid": "4fc74f98-dca9-41e5-8ea6-47ea58987843"
+                  "value": "What is the Capital of India",
+                  "type": "text"
                 }
               ]
             },
@@ -107,249 +463,13 @@
           "response": []
         }
       ],
-      "id": "38357625-f91ffc3c-ddd3-462b-83a3-1600a249aad0",
-      "description": "Here are the Some Local mind Ai model"
-    },
-    {
-      "name": "User",
-      "item": [
-        {
-          "name": "Sign Up",
-          "id": "38357625-896a7a75-08d2-4596-83de-343ebabd7de4",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                {
-                  "key": "name",
-                  "value": "Abhishek Kumar",
-                  "type": "text",
-                  "uuid": "52a99a0e-e32c-45c1-a332-5c45a7f33b86"
-                },
-                {
-                  "key": "email",
-                  "value": "abhishek.nexgen.dev@gmail.com",
-                  "type": "text",
-                  "uuid": "6b5fb02d-7871-419a-9fa6-770b8a04d250"
-                },
-                {
-                  "key": "password",
-                  "value": "Abhishek@123",
-                  "type": "text",
-                  "uuid": "0173043c-224d-49fa-b1a4-741eb7610da5"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/v1/user/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["v1", "user", "register"]
-            }
-          },
-          "response": [
-            {
-              "id": "38357625-70ab3b52-1ca5-4172-9c59-cc416005b93c",
-              "name": "New Request",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "urlencoded",
-                  "urlencoded": [
-                    {
-                      "key": "name",
-                      "value": "Abhishek Kumar",
-                      "type": "text",
-                      "uuid": "52a99a0e-e32c-45c1-a332-5c45a7f33b86"
-                    },
-                    {
-                      "key": "email",
-                      "value": "abhishek.nexgen.dev@gmail.com",
-                      "type": "text",
-                      "uuid": "6b5fb02d-7871-419a-9fa6-770b8a04d250"
-                    },
-                    {
-                      "key": "password",
-                      "value": "Abhishek@123",
-                      "type": "text",
-                      "uuid": "0173043c-224d-49fa-b1a4-741eb7610da5"
-                    }
-                  ]
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/v1/user/register",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["v1", "user", "register"]
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "",
-              "header": [
-                {
-                  "key": "X-Powered-By",
-                  "value": "Express"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "application/json; charset=utf-8"
-                },
-                {
-                  "key": "Content-Length",
-                  "value": "1243"
-                },
-                {
-                  "key": "ETag",
-                  "value": "W/\"4db-HuqqliT8WqEZ1qz3Ubl2h3xBqSQ\""
-                },
-                {
-                  "key": "Date",
-                  "value": "Sun, 02 Nov 2025 12:11:52 GMT"
-                },
-                {
-                  "key": "Connection",
-                  "value": "keep-alive"
-                },
-                {
-                  "key": "Keep-Alive",
-                  "value": "timeout=5"
-                }
-              ],
-              "cookie": [
-                {
-                  "expires": "Invalid Date",
-                  "domain": "",
-                  "path": ""
-                }
-              ],
-              "responseTime": null,
-              "body": "{\n    \"success\": true,\n    \"message\": \"User created successfully\",\n    \"data\": {\n        \"userObj\": {\n            \"$__\": {\n                \"activePaths\": {\n                    \"paths\": {\n                        \"password\": \"require\",\n                        \"email\": \"require\",\n                        \"name\": \"require\"\n                    },\n                    \"states\": {\n                        \"require\": {\n                            \"password\": true,\n                            \"email\": true,\n                            \"name\": true\n                        },\n                        \"default\": {},\n                        \"modify\": {}\n                    }\n                },\n                \"op\": null,\n                \"saving\": null,\n                \"$versionError\": null,\n                \"saveOptions\": null,\n                \"validating\": null,\n                \"cachedRequired\": {},\n                \"backup\": {\n                    \"activePaths\": {\n                        \"modify\": {\n                            \"name\": true,\n                            \"email\": true,\n                            \"password\": true,\n                            \"createdAt\": true,\n                            \"updatedAt\": true\n                        },\n                        \"default\": {\n                            \"role\": true,\n                            \"apikey\": true,\n                            \"model\": true,\n                            \"modelApiKey\": true,\n                            \"_id\": true\n                        }\n                    },\n                    \"validationError\": null\n                },\n                \"inserting\": true,\n                \"savedState\": {}\n            },\n            \"_doc\": {\n                \"name\": \"Your Name\",\n                \"email\": \"Youremail@gmail.com\",\n                \"password\": \"$argon2id$v=19$m=65536,t=3,p=4$BD6YFiBv/duiF/sL/SIZig$+jCDNZs9RBk/kGYO/GA2EvW0d0Il+Nff16TI9UEBZ/4\",\n                \"role\": \"user\",\n                \"apikey\": null,\n                \"model\": null,\n                \"modelApiKey\": null,\n                \"_id\": \"69074a885aad727a6975c5e2\",\n                \"createdAt\": \"2025-11-02T12:11:52.631Z\",\n                \"updatedAt\": \"2025-11-02T12:11:52.631Z\",\n                \"__v\": 0\n            },\n            \"$isNew\": false\n        },\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTA3NGE4ODVhYWQ3MjdhNjk3NWM1ZTIiLCJlbWFpbCI6ImFiaGlzaGVrLm5leGdlbi5kZXZAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NjIwODU1MTIsImV4cCI6MTc2MjY5MDMxMn0.olWvXB76PeyeIiwSZTfNxSCAOqMTGoFzjnr1XrfV8qE\"\n    }\n}"
-            }
-          ]
-        },
-        {
-          "name": "Login",
-          "id": "38357625-65dd89fe-ded7-493d-8ea5-4cd448d0fbcf",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                {
-                  "key": "email",
-                  "value": "abhishek.nexgen.dev@gmail.com",
-                  "type": "text",
-                  "uuid": "6180bfa7-abcb-4fc5-a188-7f1bc905ba1f"
-                },
-                {
-                  "key": "password",
-                  "value": "Abhishek@123",
-                  "type": "text",
-                  "uuid": "1fc7396d-be1c-4c16-b1c8-5963912ec869"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/v1/user/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["v1", "user", "login"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "New Request",
-          "id": "38357625-0166a0f9-7b8d-4d37-b87e-5c78f7af9e54",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        }
-      ],
-      "id": "38357625-111b6781-69a3-4a95-b7f4-5dfdf5e26977"
-    },
-    {
-      "name": "Config Ai Agent",
-      "item": [
-        {
-          "name": "New Request",
-          "id": "38357625-3dca21ab-5f9b-4d55-85cb-4ba0e93ddeef",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{LocalMindToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"agents\": [\n    {\n      \"provider\": \"ollama\",\n      \"type\": \"on-premise\",\n      \"model\": \"gemma:2b\"\n    },\n    {\n      \"provider\": \"Google\",\n      \"type\": \"cloud\",\n      \"model\": \"gemini-1.5-flash\",\n      \"key\": \"AIzaSyCgrRlV9gtARSctxcxYkHjxfPjIlklfxD4\"\n    }\n  ],\n  \"system_prompt\": \"You are a helpful assistant. Provide concise and informative answers. If you don't know the answer, say you don't know.\"\n}\n",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/v1/config/agents",
-              "host": ["{{baseUrl}}"],
-              "path": ["v1", "config", "agents"]
-            }
-          },
-          "response": []
-        }
-      ],
-      "id": "38357625-cb23174d-28bc-4b72-bc66-037a01fa1b31"
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "id": "94092231-0127-485f-aa96-07b9ccec663b",
-        "type": "text/javascript",
-        "packages": {},
-        "requests": {},
-        "exec": [""]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "id": "bafcad78-2cc8-4955-9df2-79e4d628fea7",
-        "type": "text/javascript",
-        "packages": {},
-        "requests": {},
-        "exec": [""]
-      }
+      "id": "ai-models-folder"
     }
   ],
   "variable": [
     {
       "key": "baseUrl",
-      "value": ""
+      "value": "http://localhost:5000"
     },
     {
       "key": "LocalMindToken",

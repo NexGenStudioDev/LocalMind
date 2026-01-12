@@ -813,13 +813,16 @@ Authorization: Bearer YOUR_JWT_TOKEN
 #### Register User
 
 ```http
-POST /api/v1/user/register
+POST /api/v1/auth/signup
 Content-Type: application/json
 
 {
-  "username": "john_doe",
+  "firstName": "John",
   "email": "john@example.com",
-  "password": "SecurePassword123!"
+  "password": "SecurePassword123!",
+  "birthPlace": "New York",
+  "location": "USA",
+  "role": "user"
 }
 ```
 
@@ -828,11 +831,14 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "User registered successfully",
+  "message": "User created successfully",
   "data": {
-    "userId": "abc123",
-    "username": "john_doe",
-    "email": "john@example.com",
+    "user": {
+      "firstName": "John",
+      "email": "john@example.com",
+      "role": "user",
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
 }
@@ -847,6 +853,28 @@ Content-Type: application/json
 {
   "email": "john@example.com",
   "password": "SecurePassword123!"
+}
+```
+
+#### Forgot Password
+
+```http
+POST /api/v1/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "john@example.com"
+}
+```
+
+#### Reset Password
+
+```http
+POST /api/v1/auth/reset-password/:token
+Content-Type: application/json
+
+{
+  "password": "NewSecurePassword123!"
 }
 ```
 
@@ -1430,29 +1458,33 @@ await fetch(`${API_URL}/expose/cloudflared/stop`, {
 
 ### Backend
 
-| Technology           | Purpose               | Version |
-| -------------------- | --------------------- | ------- |
-| **Node.js**          | Runtime environment   | 18+     |
-| **Express**          | Web framework         | 4.x     |
-| **TypeScript**       | Type safety           | 5.x     |
-| **Prisma / MongoDB** | Database ORM          | Latest  |
-| **JWT**              | Authentication        | Latest  |
-| **Multer**           | File uploads          | Latest  |
-| **LangChain**        | RAG implementation    | Latest  |
-| **Ollama SDK**       | Local LLM integration | Latest  |
+| Technology     | Purpose               | Version |
+| -------------- | --------------------- | ------- |
+| **Node.js**    | Runtime environment   | 18+     |
+| **Express**    | Web framework         | 4.x     |
+| **TypeScript** | Type safety           | 5.x     |
+| **Mongoose**   | MongoDB ODM           | Latest  |
+| **Zod**        | Validation            | Latest  |
+| **Jest**       | Testing Framework     | Latest  |
+| **JWT**        | Authentication        | Latest  |
+| **Multer**     | File uploads          | Latest  |
+| **LangChain**  | RAG implementation    | Latest  |
+| **Ollama SDK** | Local LLM integration | Latest  |
 
 ### Frontend
 
-| Technology       | Purpose          | Version |
-| ---------------- | ---------------- | ------- |
-| **React**        | UI framework     | 18+     |
-| **TypeScript**   | Type safety      | 5.x     |
-| **Vite**         | Build tool       | 5.x     |
-| **TailwindCSS**  | Styling          | 3.x     |
-| **Zustand**      | State management | Latest  |
-| **React Query**  | Data fetching    | Latest  |
-| **React Router** | Navigation       | 6.x     |
-| **Axios**        | HTTP client      | Latest  |
+| Technology       | Purpose           | Version |
+| ---------------- | ----------------- | ------- |
+| **React**        | UI framework      | 18+     |
+| **TypeScript**   | Type safety       | 5.x     |
+| **Vite**         | Build tool        | 5.x     |
+| **TailwindCSS**  | Styling           | 3.x     |
+| **Zustand**      | State management  | Latest  |
+| **React Query**  | Data fetching     | Latest  |
+| **Zod**          | Validation        | Latest  |
+| **Vitest**       | Testing Framework | Latest  |
+| **React Router** | Navigation        | 6.x     |
+| **Axios**        | HTTP client       | Latest  |
 
 ### AI & ML
 

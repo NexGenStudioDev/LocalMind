@@ -8,7 +8,7 @@ const passwordSchema = z
   .regex(/[A-Z]/, UserConstant.PASSWORD_UPPERCASE_REQUIRED)
   .regex(/[a-z]/, UserConstant.PASSWORD_LOWERCASE_REQUIRED)
   .regex(/[0-9]/, UserConstant.PASSWORD_NUMBER_REQUIRED)
-  .regex(/[@$!%*?&]/, UserConstant.PASSWORD_SPECIAL_CHAR_REQUIRED)
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, UserConstant.PASSWORD_SPECIAL_CHAR_REQUIRED)
 
 const roleSchema = z.enum(['user', 'admin', 'creator'], {
   message: UserConstant.INVALID_ROLE,
