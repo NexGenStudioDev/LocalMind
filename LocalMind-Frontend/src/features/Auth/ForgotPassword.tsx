@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Input from '../../shared/component/v1/Input'
 import { forgotPassword } from '../../services/auth.service'
 import robotImage from '../../assets/forgot-password-robot.png'
 
@@ -35,21 +34,31 @@ export default function ForgotPassword() {
     }
   }
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0a] flex">
-      {/* Left Side - Robot Image (Hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-gradient-to-br from-gray-400 to-gray-600">
-        <img src={robotImage} alt="AI Robot" className="w-full h-full object-cover" />
-      </div>
+  // Extracted styles
+  const glowStyles = `
+    @keyframes glow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5)); }
+      50% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)); }
+    }
+    .logo-glow {
+      animation: glow 3s ease-in-out infinite;
+    }
+  `
 
-      {/* Right Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-12">
-        <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Forgot Password?</h1>
-            <p className="text-gray-400">Enter your email to reset your password.</p>
-          </div>
+  return (
+    <div className="min-h-screen bg-[#292828] flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 pt-14 sm:pt-16 md:pt-20">
+      <style>{glowStyles}</style>
+
+      {/* Card Container */}
+      <div className="w-full max-w-7xl bg-[#181818] rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+        {/* Left Section - Form */}
+        <div className="bg-[#181818] p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 flex flex-col justify-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
+            Forgot Password?
+          </h1>
+          <p className="text-gray-400 text-xs sm:text-sm md:text-base mb-6 md:mb-8">
+            Enter your email to reset your password.
+          </p>
 
           {/* Feedback Messages */}
           {apiError && (
@@ -63,34 +72,60 @@ export default function ForgotPassword() {
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              label="Email Address"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              disabled={loading}
-            />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex flex-col gap-1.5 relative mb-6">
+              <label className="text-gray-200 text-xs sm:text-sm font-semibold">
+                Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                disabled={loading}
+                className="w-full px-4 py-2.5 bg-[#2a2a2a] border border-gray-600 rounded-lg text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
+              />
+            </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-lg bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-white hover:bg-gray-200 text-black font-bold py-2.5 text-sm sm:text-base rounded-lg transition-colors duration-200 mt-2 flex items-center justify-center gap-2"
             >
+              {loading && (
+                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+              )}
               {loading ? 'Sending...' : 'Send Reset Link'}
             </button>
 
-            <div className="text-center">
+            <div className="text-center mt-6">
               <Link
                 to="/login"
-                className="text-sm text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white hover:underline transition-all duration-200 text-sm"
               >
                 &larr; Back to Login
               </Link>
             </div>
           </form>
+        </div>
+
+        {/* Right Side - Robot Image */}
+        <div className="bg-gradient-to-br from-gray-700 to-gray-900 hidden md:flex items-center justify-center overflow-hidden">
+          <img src={robotImage} alt="AI Robot" className="w-full h-full object-cover" />
         </div>
       </div>
     </div>
