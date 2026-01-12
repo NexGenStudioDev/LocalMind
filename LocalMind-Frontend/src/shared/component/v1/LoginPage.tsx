@@ -76,8 +76,9 @@ const LoginPage: React.FC = () => {
   }
     setIsLoading(true)
 
-    try {
-      const response = await apiService.login(email, password)
+      const handleLogin = async () => {
+        try {
+          const response = await apiService.login(email, password)
 
       if (!response.success) {
         throw new Error(response.message || 'Login failed. Please try again.')
