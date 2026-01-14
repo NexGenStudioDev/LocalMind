@@ -18,10 +18,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ apiService }) => {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = async () => {
-    try {
-      setError('')
-      const response = await apiService.login(email, password)
+      const handleLogin = async () => {
+        try {
+          const response = await apiService.login(email, password)
 
       if (response.success) {
         navigate('/dashboard')
