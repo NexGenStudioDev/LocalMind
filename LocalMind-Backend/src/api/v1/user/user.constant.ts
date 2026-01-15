@@ -31,6 +31,14 @@ enum UserConstant {
   PASSWORD_RESET_FAILED = 'Failed to reset password',
   EMAIL_VERIFIED_FAILED = 'Failed to verify email',
 
+  // ✅ FORGOT & RESET PASSWORD
+  FORGOT_PASSWORD_SUCCESS = 'If the email exists, a reset link has been sent.',
+  RESET_PASSWORD_SUCCESS = 'Password reset successful',
+  FORGOT_PASSWORD_FAILED = 'Failed to process forgot password request',
+  INVALID_OR_EXPIRED_TOKEN = 'Invalid or expired reset token',
+  TOKEN_EXPIRED = 'Reset token has expired',
+  RESET_PASSWORD_TOKEN_MISSING = 'Reset password token is missing',
+
   // ✅ PASSWORD VALIDATION & ERRORS
 
   PASSWORD_REQUIRED = 'Password is required',
@@ -52,9 +60,6 @@ enum UserConstant {
   FORBIDDEN = 'Forbidden access',
 
   // ✅ USER & INPUT VALIDATION
-  INVALID_ROLE = 'Invalid role',
-  INVALID_URL = 'Invalid portfolio URL',
-  BIO_MAX_LENGTH = 'Bio must be at most 300 characters',
   USER_NOT_FOUND = 'User not found',
   EMAIL_ALREADY_EXISTS = 'Email already exists',
   INVALID_INPUT = 'User is not available in request',
@@ -63,7 +68,6 @@ enum UserConstant {
   FIRST_NAME_REQUIRED = 'First name is required',
   BIRTH_PLACE_REQUIRED = 'Birth place is required',
   LOCATION_REQUIRED = 'Location is required',
-  INVALID_ROLE = 'Invalid user role',
   INVALID_PORTFOLIO_URL = 'Portfolio URL is invalid',
   BIO_TOO_LONG = 'Bio exceeds the maximum allowed length',
 
@@ -95,10 +99,15 @@ export const AllowedUserRoles = ['user', 'admin', 'creator'] as const
 
 export const PasswordConfig = {
   minLength: 8,
-  maxLength: 20,
+  maxLength: 128,
   saltRounds: 10,
 }
 
 export const BioConfig = {
   maxLength: 500,
+}
+
+export const ResetPasswordConfig = {
+  tokenLength: 32, // 32 bytes = 64 hex characters
+  expiryMinutes: 15, // Token valid for 15 minutes
 }

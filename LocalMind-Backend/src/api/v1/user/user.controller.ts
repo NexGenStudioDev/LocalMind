@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { userLoginSchema, userRegisterSchema } from './user.validator'
+import { userLoginSchema, userRegisterSchema, forgotPasswordSchema, resetPasswordSchema } from './user.validator'
 import userService from './user.service'
 import { SendResponse } from '../../../utils/SendResponse.utils'
 import UserUtils from './user.utils'
@@ -7,6 +7,9 @@ import { IUser } from './user.type'
 import jwt from 'jsonwebtoken'
 import UserConstant from './user.constant'
 import { StatusConstant } from '../../../constant/Status.constant'
+import passwordResetService from '../../../services/password-reset.service'
+import emailService from '../../../utils/email.utils'
+import { env } from '../../../constant/env.constant'
 
 class UserController {
   constructor() {
@@ -15,6 +18,8 @@ class UserController {
     this.profile = this.profile.bind(this)
     this.apiEndPointCreater = this.apiEndPointCreater.bind(this)
     this.getApiKey = this.getApiKey.bind(this)
+    this.forgotPassword = this.forgotPassword.bind(this)
+    this.resetPassword = this.resetPassword.bind(this)
   }
 
   private setHeaderToken(res: Response, token: string): void {
@@ -36,11 +41,9 @@ class UserController {
         throw new Error(UserConstant.EMAIL_ALREADY_EXISTS)
       }
 
-      const user = await userService.createUser(validatedData)
-
+      const user = await userService.createUser(validatedData as any)
 
       const userObj = UserUtils.sanitizeUser(user)
-
 
       const token = UserUtils.generateToken({
         userId: String(user._id),
@@ -52,33 +55,29 @@ class UserController {
 
       SendResponse.success(res, UserConstant.CREATE_USER_SUCCESS, { userObj }, 201)
     } catch (err: any) {
-  if (err?.code === 11000) {
-    SendResponse.error(
-      res,
-      UserConstant.EMAIL_ALREADY_EXISTS,
-      StatusConstant.CONFLICT
-    )
-    return
-  }
+      if (err?.code === 11000) {
+        SendResponse.error(res, UserConstant.EMAIL_ALREADY_EXISTS, StatusConstant.CONFLICT)
+        return
+      }
 
-  SendResponse.error(
-    res,
-    err.message || UserConstant.CREATE_USER_FAILED,
-    StatusConstant.INTERNAL_SERVER_ERROR,
-    err
-  )
-}
+      SendResponse.error(
+        res,
+        err.message || UserConstant.CREATE_USER_FAILED,
+        StatusConstant.INTERNAL_SERVER_ERROR,
+        err
+      )
+    }
   }
 
   async login(req: Request, res: Response): Promise<void> {
     try {
       const validatedData = userLoginSchema.parse(req.body)
 
-      const user = await UserUtils.findByEmailandCheckPassword(validatedData)
+      const user = await UserUtils.findByEmailandCheckPassword(validatedData as any)
 
       const token = UserUtils.generateToken({
         userId: user.userObj._id || '',
-        email: user.userObj.email,
+        email: user.userObj.email || validatedData.email,
         role: user.userObj.role,
       })
 
@@ -156,6 +155,108 @@ class UserController {
       SendResponse.success(res, UserConstant.API_KEY_FETCHED, { apiKey: maskedKey }, 200)
     } catch (err: any) {
       SendResponse.error(res, err.message || UserConstant.SERVER_ERROR, 500, err)
+    }
+  }
+
+  /**
+   * Forgot Password - Initiate password reset
+   * POST /api/auth/forgot-password
+   * Body: { email: string }
+   */
+  async forgotPassword(req: Request, res: Response): Promise<void> {
+    try {
+      // Validate input
+      const validatedData = await forgotPasswordSchema.parseAsync(req.body)
+
+      // Initiate password reset
+      const resetToken = await passwordResetService.initiatePasswordReset(validatedData.email)
+
+      // Build reset link
+      // Note: The frontend URL should be configured via environment variable
+      const resetLink = `${env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${resetToken}`
+
+      // Send email with reset link (async, don't wait)
+      if (resetToken) {
+        emailService.sendPasswordResetEmail(validatedData.email, resetLink).catch((err) => {
+          console.error('Failed to send password reset email:', err)
+          // Error is not exposed to user (security)
+        })
+      }
+
+      // Always return success message (don't reveal if email exists)
+      SendResponse.success(res, UserConstant.FORGOT_PASSWORD_SUCCESS, {}, StatusConstant.OK)
+    } catch (err: any) {
+      if (err?.name === 'ZodError') {
+        SendResponse.error(res, UserConstant.INVALID_CREDENTIALS, StatusConstant.BAD_REQUEST, err)
+        return
+      }
+
+      // Log error but return generic message
+      console.error('Forgot password error:', err)
+      SendResponse.success(res, UserConstant.FORGOT_PASSWORD_SUCCESS, {}, StatusConstant.OK)
+    }
+  }
+
+  /**
+   * Reset Password - Complete password reset with token
+   * POST /api/auth/reset-password/:token
+   * Body: { password: string }
+   */
+  async resetPassword(req: Request, res: Response): Promise<void> {
+    try {
+      // Get token from URL params
+      const { token } = req.params
+
+      if (!token) {
+        SendResponse.error(
+          res,
+          UserConstant.RESET_PASSWORD_TOKEN_MISSING,
+          StatusConstant.BAD_REQUEST
+        )
+        return
+      }
+
+      // Validate password input
+      const validatedData = await resetPasswordSchema.parseAsync(req.body)
+
+      // Verify token
+      const user = await passwordResetService.verifyResetToken(token)
+
+      if (!user) {
+        SendResponse.error(
+          res,
+          UserConstant.INVALID_OR_EXPIRED_TOKEN,
+          StatusConstant.UNAUTHORIZED
+        )
+        return
+      }
+
+      // Reset password
+      const success = await passwordResetService.resetPassword(token, validatedData.password)
+
+      if (!success) {
+        SendResponse.error(
+          res,
+          UserConstant.PASSWORD_RESET_FAILED,
+          StatusConstant.INTERNAL_SERVER_ERROR
+        )
+        return
+      }
+
+      SendResponse.success(res, UserConstant.RESET_PASSWORD_SUCCESS, {}, StatusConstant.OK)
+    } catch (err: any) {
+      if (err?.name === 'ZodError') {
+        SendResponse.error(res, err.message || UserConstant.INVALID_INPUT, StatusConstant.BAD_REQUEST, err)
+        return
+      }
+
+      console.error('Reset password error:', err)
+      SendResponse.error(
+        res,
+        UserConstant.PASSWORD_RESET_FAILED,
+        StatusConstant.INTERNAL_SERVER_ERROR,
+        err
+      )
     }
   }
 }

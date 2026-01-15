@@ -1,0 +1,30 @@
+
+> localmind-backend@1.0.0 type-check
+> tsc --noEmit
+
+src/api/v1/AiModelConfig/AiModelConfig.controller.ts(18,47): error TS2551: Property 'VerifyUserToken' does not exist on type 'typeof UserUtils'. Did you mean 'verifyToken'?
+src/api/v1/Tunnel/__test__/Tunnel.test.ts(35,23): error TS2558: Expected 0-1 type arguments, but got 2.
+src/api/v1/Tunnel/__test__/Tunnel.test.ts(67,23): error TS2558: Expected 0-1 type arguments, but got 2.
+src/api/v1/Tunnel/__test__/Tunnel.test.ts(103,23): error TS2558: Expected 0-1 type arguments, but got 2.
+src/api/v1/Tunnel/__test__/Tunnel.test.ts(126,23): error TS2558: Expected 0-1 type arguments, but got 2.
+src/api/v1/Tunnel/__test__/Tunnel.test.ts(151,23): error TS2558: Expected 0-1 type arguments, but got 2.
+src/api/v1/Tunnel/__test__/Tunnel.test.ts(176,23): error TS2558: Expected 0-1 type arguments, but got 2.
+src/api/v1/Tunnel/Tunnel.utils.ts(31,9): error TS2322: Type 'string | undefined' is not assignable to type 'string | null'.
+  Type 'undefined' is not assignable to type 'string | null'.
+src/api/v1/user/user.constant.ts(55,3): error TS2300: Duplicate identifier 'INVALID_ROLE'.
+src/api/v1/user/user.constant.ts(66,3): error TS2300: Duplicate identifier 'INVALID_ROLE'.
+src/api/v1/user/user.controller.ts(39,49): error TS2379: Argument of type '{ firstName: string; role: "user" | "admin" | "creator"; email: string; birthPlace: string; location: string; password: string; portfolioUrl?: string | undefined; bio?: string | undefined; }' is not assignable to parameter of type 'IUser' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'portfolioUrl' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string | null'.
+      Type 'undefined' is not assignable to type 'string | null'.
+src/api/v1/user/user.controller.ts(77,64): error TS2345: Argument of type '{ email: string; password: string; }' is not assignable to parameter of type 'IUser'.
+  Type '{ email: string; password: string; }' is missing the following properties from type 'IUser': firstName, birthPlace, location
+src/api/v1/user/user.controller.ts(81,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/api/v1/user/user.utils.ts(33,11): error TS2322: Type 'string' is not assignable to type '"user" | "admin" | "creator" | undefined'.
+src/api/v1/user/user.validator.ts(13,22): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: readonly ["user", "admin", "creator"], params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Object literal may only specify known properties, and 'errorMap' does not exist in type '{ error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; }'.
+  Overload 2 of 2, '(entries: Readonly<Record<string, EnumValue>>, params?: string | { error?: string | $ZodErrorMap<$ZodIssueInvalidValue<unknown>> | undefined; message?: string | undefined; } | undefined): ZodEnum<...>', gave the following error.
+    Argument of type 'readonly ["user", "admin", "creator"]' is not assignable to parameter of type 'Readonly<Record<string, EnumValue>>'.
+      Index signature for type 'string' is missing in type 'readonly ["user", "admin", "creator"]'.

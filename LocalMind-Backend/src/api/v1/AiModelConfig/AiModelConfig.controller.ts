@@ -15,7 +15,7 @@ class AiModelConfig_Controller {
       const token = req.headers.authorization?.split(' ')[1] || req.cookies?.token
       if (!token) throw new Error('Authentication token missing')
 
-      const FindUserByToken = await UserUtils.VerifyUserToken(token)
+      const FindUserByToken = await UserUtils.verifyToken(token)
 
       if (!FindUserByToken) throw new Error('Invalid authentication token')
 

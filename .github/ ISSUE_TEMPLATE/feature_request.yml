@@ -1,55 +1,71 @@
 name: ✨ Feature Request
-description: Suggest an idea or improvement
-title: '[Feature]: '
-labels: ['enhancement']
+description: Suggest a new feature or improvement for this project
+title: "[Feature]: "
+labels:
+  - enhancement
 assignees: []
 
 body:
   - type: markdown
     attributes:
       value: |
-        Have an idea? We'd love to hear it!
+        🚀 **Thanks for taking the time to suggest a feature!**  
+        Please fill out the form below so we can properly evaluate your idea.
 
   - type: textarea
-    id: problem
+    id: problem_statement
     attributes:
-      label: Problem Statement
-      description: What problem does this feature solve?
-      placeholder: I'm frustrated when...
+      label: 🧩 Problem Statement
+      description: Clearly describe the problem or limitation you are facing.
+      placeholder: I’m facing an issue when...
     validations:
       required: true
 
   - type: textarea
-    id: solution
+    id: proposed_solution
     attributes:
-      label: Proposed Solution
-      description: Describe the solution you'd like.
+      label: 💡 Proposed Solution
+      description: Describe the feature or improvement you would like to see.
+      placeholder: A possible solution would be...
     validations:
       required: true
 
   - type: textarea
-    id: alternatives
+    id: alternatives_considered
     attributes:
-      label: Alternatives Considered
-      description: Any alternative solutions you've thought about?
+      label: 🔄 Alternatives Considered
+      description: List any alternative solutions or features you have considered.
+      placeholder: Other approaches could be...
     validations:
-      required: false
+      required: true
 
   - type: dropdown
     id: priority
     attributes:
-      label: Priority
+      label: ⚡ Priority
+      description: How important is this feature to you?
       options:
         - Low
         - Medium
         - High
+        - Critical
     validations:
       required: true
 
   - type: textarea
-    id: additional
+    id: additional_context
     attributes:
-      label: Additional Context
-      description: Any other context or screenshots?
+      label: 📎 Additional Context
+      description: Add mockups, screenshots, links, or any extra context.
+      placeholder: Screenshots, diagrams, references, etc.
     validations:
-      required: false
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: ✔️ Confirmation
+      description: Please confirm before submitting.
+      options:
+        - label: I have searched existing issues and this feature has not been requested before.
+          required: true
