@@ -7,14 +7,14 @@ class AiModelConfigUtility {
   }
 
   public async findAiModelConfigById_And_ModelName(
-    id: string,
+    userId: string,
     modelName: string
   ): Promise<IAiModelConfig | null> {
-    return await AiModelConfig.findOne({ _id: id, 'agents.model': modelName }).exec()
+    return await AiModelConfig.findOne({ userId, 'agents.model': modelName }).exec()
   }
 
-  public async findAiModelConfigByUserId(id: string): Promise<IAiModelConfig | null> {
-    return await AiModelConfig.findById(id).exec()
+  public async findAiModelConfigByUserId(userId: string): Promise<IAiModelConfig | null> {
+    return await AiModelConfig.findOne({ userId }).select('-agents.key').exec()
   }
 
   public async findAiModelConfigsByUserId(userId: string): Promise<IAiModelConfig[]> {
