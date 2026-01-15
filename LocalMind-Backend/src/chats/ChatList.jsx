@@ -15,7 +15,16 @@ export default function ChatList({ messages = [], isTyping = false }) {
   return (
     <main ref={containerRef} className="flex-1 overflow-y-auto px-4 py-6 space-y-4 scroll-smooth">
       <div className="flex flex-col gap-4">
-        {messages.map((m) => <ChatMessage key={m.id} message={m} />)}
+        {messages.length === 0 ? (
+          <div className="text-center text-gray-500 dark:text-gray-400">
+            <p>No messages yet.</p>
+            <p>Start a conversation with your friends.</p>
+          </div>
+        ) : (
+          messages.map((message, index) => (
+            <ChatMessage key={index} message={message} />
+          ))
+        )}
         {isTyping && (
           <div className="flex justify-start">
             <TypingIndicator />
