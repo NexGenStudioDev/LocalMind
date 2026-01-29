@@ -78,6 +78,7 @@ EmailService (Main Orchestrator)
   
   <p>
     <a href="#-quick-start">Quick Start</a> •
+    <a href="#-screenshots">Screenshots</a> •
     <a href="#-features">Features</a> •
     <a href="#-installation-guide">Installation</a> •
     <a href="#-api-documentation">API Docs</a> •
@@ -90,6 +91,7 @@ EmailService (Main Orchestrator)
 ## 📖 Table of Contents
 
 - [🔥 Overview](#-overview)
+- [📸 Screenshots](#-screenshots)
 - [✨ Features](#-features)
   - [🧠 AI Model Support](#-ai-model-support)
   - [📚 RAG: Train with Your Own Data](#-rag-train-with-your-own-data)
@@ -147,6 +149,47 @@ EmailService (Main Orchestrator)
 - 🚀 **Startups** needing custom AI solutions without enterprise costs
 - 🏢 **Organizations** requiring private AI infrastructure
 - 🎨 **Creators** experimenting with AI-assisted content generation
+
+---
+
+## 📸 Screenshots
+
+### Chat Interface
+
+<div align="center">
+  <img src="assets/screenshots/chat-interface.png" alt="LocalMind Chat Interface" width="800"/>
+  <p><em>Clean, intuitive chat interface with multi-model support</em></p>
+</div>
+
+### Model Selection
+
+<div align="center">
+  <img src="assets/screenshots/model-selection.png" alt="AI Model Selection" width="800"/>
+  <p><em>Easily switch between local and cloud AI models</em></p>
+</div>
+
+### RAG Dataset Upload
+
+<div align="center">
+  <img src="assets/screenshots/rag-upload.png" alt="RAG Dataset Upload" width="800"/>
+  <p><em>Upload and process your own data for custom AI training</em></p>
+</div>
+
+### Dashboard
+
+<div align="center">
+  <img src="assets/screenshots/dashboard.png" alt="User Dashboard" width="800"/>
+  <p><em>Monitor usage, manage models, and configure settings</em></p>
+</div>
+
+### Real-Time Streaming
+
+<div align="center">
+  <img src="assets/screenshots/streaming-response.png" alt="Streaming Responses" width="800"/>
+  <p><em>Watch AI responses stream in real-time for better UX</em></p>
+</div>
+
+> **Note:** Screenshots showcase the latest version. Your interface may vary depending on customization and theme settings.
 
 ---
 
@@ -694,99 +737,130 @@ git commit --no-verify
 ```
 LocalMind/
 │
-
-├── server/                      # Backend application
-│   ├── src/
-│   │   ├── config/             # Configuration files
-│   │   ├── controllers/        # Request handlers
-│   │   ├── middleware/         # Express middleware
-│   │   ├── models/             # Database models
-│   │   ├── routes/             # API routes
-│   │   ├── services/           # Business logic
-│   │   │   ├── ai/            # AI provider integrations
-│   │   │   ├── rag/           # RAG implementation
-│   │   │   └── tunnel/        # Tunnel services
-│   │   ├── utils/              # Helper functions
-│   │   ├── validators/         # Input validation
-│   │   └── index.ts           # Entry point
-│   ├── tests/                  # Test files
-│   ├── .env.example           # Environment template
-│   ├── package.json
-│   └── tsconfig.json
+├── assets/                          # Project assets and media
+│   ├── Banner_LocalMind.png        # Main banner image
+│   └── screenshots/                # Application screenshots for documentation
+│       ├── chat-interface.png
+│       ├── model-selection.png
+│       ├── rag-upload.png
+│       ├── dashboard.png
+│       └── streaming-response.png
 │
-├── client/                      # Frontend application
-│   ├── public/                 # Static assets
+├── LocalMind-Backend/              # Backend Node.js/Express application
 │   ├── src/
-│   │   ├── assets/            # Images, fonts, etc.
-│   │   ├── components/        # React components
-│   │   │   ├── chat/
-│   │   │   ├── upload/
-│   │   │   └── settings/
-│   │   ├── hooks/             # Custom React hooks
-│   │   ├── pages/             # Page components
-│   │   ├── services/          # API client
-│   │   ├── store/             # State management
-│   │   ├── styles/            # CSS/SCSS files
-│   │   ├── types/             # TypeScript types
-│   │   ├── utils/             # Helper functions
-│   │   ├── App.tsx            # Root component
-│   │   └── main.tsx           # Entry point
-│   ├── .env.example
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── vite.config.ts
-│
-├── docs/                        # Documentation
-├── scripts/                     # Utility scripts
-├── docker-compose.yml
-├── .gitignore
-├── LICENSE
-└── README.md
-=======
-├── assets/
-│   └── Banner_LocalMind.png
-│
-├── LocalMind-Backend/
-│   ├── src/
-│   │   └── ... (backend source code)
-│   │
-│   ├── types/
-│   │   └── ... (TypeScript types)
-│   │
-│   ├── .env.example
+│   │   ├── api/
+│   │   │   └── v1/                # API v1 routes and controllers
+│   │   │       ├── Ai-model/      # AI model integrations
+│   │   │       │   ├── Google/    # Google Gemini integration
+│   │   │       │   ├── Groq/      # Groq integration
+│   │   │       │   └── Ollama/    # Ollama local models
+│   │   │       ├── AiModelConfig/ # AI configuration management
+│   │   │       ├── DataSet/       # Dataset upload & management
+│   │   │       └── user/          # User authentication & management
+│   │   ├── config/                # Configuration files
+│   │   │   └── mongoose.connection.ts
+│   │   ├── constant/              # Application constants
+│   │   │   ├── env.constant.ts
+│   │   │   └── Status.constant.ts
+│   │   ├── data/                  # Sample data files
+│   │   │   └── Sample.csv
+│   │   ├── doc/                   # API documentation
+│   │   ├── routes/                # Route aggregation
+│   │   │   └── app.ts
+│   │   ├── Template/              # AI prompt templates
+│   │   │   └── v1/
+│   │   │       ├── Ai.template.ts
+│   │   │       └── text/
+│   │   ├── utils/                 # Utility functions
+│   │   │   └── SendResponse.utils.ts
+│   │   ├── validator/             # Input validation schemas
+│   │   │   └── env.ts
+│   │   └── server.ts              # Application entry point
+│   ├── types/                     # TypeScript type definitions
+│   │   └── express.d.ts
+│   ├── .env.example               # Environment variables template
 │   ├── .gitignore
 │   ├── .prettierignore
 │   ├── .prettierrc
-│   ├── a.md
-│   ├── jest.config.ts
+│   ├── jest.config.ts             # Jest testing configuration
 │   ├── package.json
 │   ├── pnpm-lock.yaml
-│   ├── setup-cloudflare.sh
-│   ├── tsconfig.json
+│   ├── setup-cloudflare.sh        # Cloudflare tunnel setup script
+│   └── tsconfig.json              # TypeScript configuration
 │
-├── LocalMind-Frontend/
-│   ├── public/
-│   │   └── ... (static assets)
-│   │
+├── LocalMind-Frontend/             # Frontend React application
+│   ├── public/                    # Static assets served directly
 │   ├── src/
-│   │   └── ... (React code)
-│   │
+│   │   ├── app/                   # Core application components
+│   │   │   ├── css/
+│   │   │   │   └── global.css    # Global styles
+│   │   │   ├── routes/           # Route definitions
+│   │   │   │   ├── AdminRoutes.tsx
+│   │   │   │   ├── AppRoutes.tsx
+│   │   │   │   ├── PrivateRoute.tsx
+│   │   │   │   └── UserRoutes.tsx
+│   │   │   ├── store/            # State management
+│   │   │   │   └── store.ts
+│   │   │   └── App.tsx           # Root component
+│   │   ├── assets/               # Images, fonts, icons
+│   │   │   └── Fonts/
+│   │   ├── constants/            # Frontend constants
+│   │   ├── core/                 # Core utilities
+│   │   ├── features/             # Feature-based modules
+│   │   │   ├── Dashboard/
+│   │   │   │   └── V1/
+│   │   │   └── Homepage/
+│   │   │       └── V1/
+│   │   │           ├── Components/
+│   │   │           └── Homepage.tsx
+│   │   ├── hooks/                # Custom React hooks
+│   │   ├── shared/               # Shared components
+│   │   │   └── component/
+│   │   │       └── v1/
+│   │   │           ├── Card.tsx
+│   │   │           └── Navbar.tsx
+│   │   ├── types/                # TypeScript interfaces
+│   │   │   └── Interfaces.ts
+│   │   └── index.tsx             # Application entry point
 │   ├── .gitignore
-│   ├── eslint.config.js
-│   ├── index.html
+│   ├── eslint.config.js          # ESLint configuration
+│   ├── index.html                # HTML template
 │   ├── package.json
 │   ├── pnpm-lock.yaml
-│   ├── tsconfig.app.json
-│   ├── tsconfig.json
-│   ├── tsconfig.node.json
-│   ├── vite.config.ts
+│   ├── README.md
+│   ├── tsconfig.app.json         # TypeScript app config
+│   ├── tsconfig.json             # TypeScript base config
+│   ├── tsconfig.node.json        # TypeScript Node config
+│   └── vite.config.ts            # Vite build configuration
 │
-├── Contributing.md
-├── LICENSE
-└── README.md
-
-
+├── .gitignore                     # Git ignore rules
+├── Contributing.md                # Contribution guidelines
+├── docker-compose.yml             # Docker Compose configuration
+├── dockerfile.md                  # Dockerfile documentation
+├── env.example                    # Root environment template
+├── LICENSE                        # MIT License
+├── package.json                   # Root package.json (workspace)
+└── README.md                      # This file
 ```
+
+### Directory Purpose Explanation
+
+#### Backend (`LocalMind-Backend/`)
+
+- **`src/api/v1/`** — Versioned API routes, controllers, and services
+- **`src/config/`** — Database connections and app configuration
+- **`src/constant/`** — Environment variables and status codes
+- **`src/Template/`** — AI system prompts and templates
+- **`src/utils/`** — Helper functions for responses, validation
+- **`types/`** — TypeScript type extensions and declarations
+
+#### Frontend (`LocalMind-Frontend/`)
+
+- **`src/app/`** — Application shell, routing, and global state
+- **`src/features/`** — Feature-based architecture (Dashboard, Homepage, etc.)
+- **`src/shared/`** — Reusable UI components (Card, Navbar)
+- **`src/hooks/`** — Custom React hooks for logic reuse
+- **`src/types/`** — TypeScript interfaces and types
 
 ---
 
