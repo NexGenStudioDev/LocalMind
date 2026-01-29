@@ -1,4 +1,3 @@
-import { console } from 'inspector'
 import AiModelConfig from './AiModelConfig.model'
 import { IAiModelConfig, IAgent } from './AiModelConfig.type'
 
@@ -8,22 +7,44 @@ class AiModelConfig_Service {
   }
 
   async addAgent(userId: string, agent: IAgent): Promise<IAiModelConfig | null> {
-    console.log('Adding agent for userId:', userId, 'with agent:', agent)
     return await AiModelConfig.findOneAndUpdate(
       { userId },
-      { $push: { agents: agent } },
+      { $addToSet: { agents: agent } },
       { new: true }
     )
   }
 
-  async removeAgent(userId: string, _agentId: string): Promise<IAiModelConfig | null> {
-    const config = (await AiModelConfig.findOne({ userId }).exec()) as any
+  async removeAgent(userId: string, agentId: string): Promise<IAiModelConfig | null> {
+    if (!agentId) {
+      throw new Error('Agent ID is required to remove an agent.')
+    }
+
+    const config = await AiModelConfig.findOneAndUpdate(
+      { userId },
+      { $pull: { agents: { _id: agentId } } },
+      { new: true }
+    ).exec()
 
     if (!config) {
       throw new Error('AI Model Config not found for the user.')
     }
 
-    return await config.save()
+    return config
+  }
+
+  async getConfig(userId: string): Promise<IAiModelConfig | null> {
+    return await AiModelConfig.findOne({ userId }).select('-agents.key').exec()
+  }
+
+  async updateConfig(
+    userId: string,
+    updates: Partial<IAiModelConfig>
+  ): Promise<IAiModelConfig | null> {
+    return await AiModelConfig.findOneAndUpdate({ userId }, updates, {
+      new: true,
+    })
+      .select('-agents.key')
+      .exec()
   }
 }
 
