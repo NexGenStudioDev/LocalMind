@@ -5,6 +5,8 @@ import SignUp from '../../features/Auth/SignUp'
 import LoginPage from '../../shared/component/v1/LoginPage'
 import ForgotPwd from '../../shared/component/v1/ForgotPwd'
 import ResetPassword from '../../shared/component/v1/ResetPassword'
+import PrivacyPolicy from './features/Pages/PrivacyPolicy'
+import TermsConditions from './features/Pages/TermsConditions'
 
 const AppRoutes: React.FC = () => {
   return (
@@ -17,7 +19,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
-
+    
       {/* Register Page - TODO: Create dedicated RegisterPage component */}
       <Route path="/register" element={<LoginPage />} />
 
@@ -27,6 +29,10 @@ const AppRoutes: React.FC = () => {
       {/* Reset Password Page */}
       <Route path="/reset-password/:token" element={<ResetPassword />} />
 
+      {/* Legal Pages */}
+      
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
       {/* Chat Page */}
     </Routes>
   )
