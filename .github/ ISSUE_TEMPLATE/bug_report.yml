@@ -1,56 +1,70 @@
 name: 🐛 Bug Report
-description: Report a bug to help us improve
-title: '[Bug]: '
-labels: ['bug']
+description: Report a bug to help us improve the project
+title: "[Bug]: "
+labels:
+  - bug
 assignees: []
 
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to report a bug!
+        👋 **Thanks for reporting a bug!**  
+        Please fill out **all fields below** so we can understand and fix the issue quickly.
 
   - type: textarea
-    id: description
+    id: bug_description
     attributes:
-      label: Bug Description
-      description: What went wrong?
-      placeholder: A clear and concise description of the bug.
+      label: 🐞 Bug Description
+      description: Clearly describe what the bug is.
+      placeholder: Explain what is broken or not working as expected.
     validations:
       required: true
 
   - type: textarea
-    id: steps
+    id: steps_to_reproduce
     attributes:
-      label: Steps to Reproduce
-      description: How can we reproduce the issue?
+      label: 🔁 Steps to Reproduce
+      description: Provide step-by-step instructions to reproduce the issue.
       placeholder: |
         1. Go to '...'
         2. Click on '...'
-        3. See error
+        3. Observe the error
     validations:
       required: true
 
   - type: textarea
-    id: expected
+    id: expected_behavior
     attributes:
-      label: Expected Behavior
-      description: What did you expect to happen?
+      label: ✅ Expected Behavior
+      description: What did you expect to happen instead?
+      placeholder: Describe the correct or expected outcome.
     validations:
       required: true
 
   - type: textarea
-    id: screenshots
+    id: actual_behavior
     attributes:
-      label: Screenshots / Logs
-      description: Add screenshots or logs if applicable.
+      label: ❌ Actual Behavior
+      description: What actually happened?
+      placeholder: Describe what went wrong.
     validations:
-      required: false
+      required: true
+
+  - type: textarea
+    id: screenshots_logs
+    attributes:
+      label: 📸 Screenshots / Logs
+      description: Attach screenshots, screen recordings, or logs that help explain the issue.
+      placeholder: Paste logs here or drag and drop images.
+    validations:
+      required: true
 
   - type: dropdown
     id: environment
     attributes:
-      label: Environment
+      label: 🖥️ Environment
+      description: Select the platform where the issue occurred.
       options:
         - Windows
         - macOS
@@ -60,3 +74,21 @@ body:
         - Other
     validations:
       required: true
+
+  - type: input
+    id: browser_or_version
+    attributes:
+      label: 🌐 Browser / App Version
+      description: Specify browser name & version or app version.
+      placeholder: e.g. Chrome 121.0 / App v2.3.1
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: ✔️ Confirmation
+      description: Please confirm before submitting.
+      options:
+        - label: I have searched existing issues and this bug has not been reported before.
+          required: true
