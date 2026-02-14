@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What is React?",
+    "answer": "React is a JavaScript library for building user interfaces, developed by Facebook."
+  },
+  {
+    "question": "What is Node.js?",
+    "answer": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine that allows you to run JavaScript on the server."
+  },
+  {
+    "question": "What is TypeScript?",
+    "answer": "TypeScript is a typed superset of JavaScript that compiles to plain JavaScript, adding optional static typing."
+  },
+  {
+    "question": "What is MongoDB?",
+    "answer": "MongoDB is a NoSQL database that stores data in flexible, JSON-like documents."
+  },
+  {
+    "question": "What is Express.js?",
+    "answer": "Express.js is a minimal and flexible Node.js web application framework that provides robust features for web and mobile applications."
+  }
+]
